@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html ng-app="mataTabi">
+<head>
+	<title>spot registration</title>
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+	<!--lightbox -->
+	<link rel="stylesheet" type="text/css" href="css/lightbox.css">
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	
+	</head>
+	<body>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+	<script src="controllers/controller.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="js/lightbox.min.js"></script>
+	<script type="text/javascript" 
+	        src="https://maps.googleapis.com/maps/api/js?v=3&amp;key=AIzaSyApUY508Q917TvPTwIiPYu0EhvEYQNJuDQ"></script>
+
+
+	<div class="container" ng-controller="AppCtrl" >
+		<h1>スポット登録</h1>
+		<label>
+			<input type="radio" ng-model=spot.entry value="new">
+			新規登録（instagram/twitter）
+		</label>
+		<label>
+			<input type="radio" ng-model=spot.entry value="facebook">
+			新規登録（facebook）
+		</label>
+		<table class="table" style="table-layout: fixed;">  
+			<thead>
+				<tr>
+					<th class="col-sm-1"></th>
+					<th class="col-sm-4"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr><td>スポット名</td><td><input class="form-control" ng-model=spot.name></td></tr>
+					<!-- location search -->
+				<tr><td>位置検索</td>
+					<td><input type="text" id="my-address">
+	 					<button class="btn btn-info" id="getCords" ng-click="codeAddress()">検索</button>
+						<div id="out"></div>
+						<input type="hidden" id="lat" readonly></input>
+						<input type="hidden" id="lon" readonly></input>
+						<ul id="plus-location" class ="hidden">
+							<li><input type="checkbox" id="cb501"   ng-model="spot.lat" ng-click="addLocation()" />
+			    				<label for="cb501" >この位置情報を登録する<img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>
+							</li>
+						</ul>
+					</td>
+				</tr>
+				<tr><td>スポットタグ</td><td><input class="form-control" ng-model=spot.tag_spot></td></tr>
+				<tr><td>検索キーワードinstagram用</td><td><input class="form-control" ng-model=spot.keyword_instagram></td></tr>
+				<tr><td>スポットタグinstagram用</td><td><input class="form-control" ng-model=spot.tag_instagram></td></tr>
+				<tr><td>スポット登録日</td><td><input class="form-control" ng-disabled="spot.facebook" ng-model=spot.date></td></tr>
+				<tr><td>スポット説明（日本語）</td><td><textarea rows="3" class="form-control" ng-model=spot.description_japanese></textarea></td></tr>
+				<tr><td>スポット説明（英語）</td><td><textarea rows="3" class="form-control" ng-model=spot.description_english></textarea></td></tr>
+				<tr><td>スポット説明（中国語）</td><td><textarea rows="3" class="form-control" ng-model=spot.description_chinese></textarea></td></tr>
+				<tr><td>スポット説明（韓国語）</td><td><textarea rows="3" class="form-control" ng-disabled="spot.facebook" ng-model=spot.description_korean></textarea></td></tr>
+				<tr><td>口コミ（日本語）</td><td><textarea rows="2" class="form-control" ng-disabled="spot.facebook" ng-model=spot.comment_japanese></textarea></td></tr>
+				<tr><td>口コミ（英語）</td><td><textarea rows="2" class="form-control" ng-disabled="spot.facebook" ng-model=spot.comment_english></textarea></td></tr>
+				<tr><td>口コミ（中国語）</td><td><textarea rows="2" class="form-control" ng-disabled="spot.facebook" ng-model=spot.comment_chinese></textarea></td></tr>
+				<tr><td>口コミ（韓国語）</td><td><textarea rows="2" class="form-control" ng-disabled="spot.facebook" ng-model=spot.comment_korean></textarea></td></tr>
+				<!--facebook -->
+				<tr><td>Facebookメッセージ</td><td><input class="form-control" ng-model=spot.facebook_messaage></td></tr>
+				<tr><td>Facebook登録時間</td><td><input class="form-control" ng-model=spot.facebook_created_time></td></tr>
+				<tr><td>Facebook写真</td><td><input class="form-control" ng-model=spot.facebook_full_picture></td></tr>
+
+				<!--添付ファイル -->
+				<tr><td>写真1</td><td><input type="file" ng-disabled="spot.facebook" ng-model=spot.photo1 accept="image/*" app-fileread></td></tr>
+				<tr><td>写真2</td><td><input type="file" ng-disabled="spot.facebook" ng-model=spot.photo2 accept="image/*" app-fileread></td></tr>
+				<tr><td>写真3</td><td><input type="file" ng-disabled="spot.facebook" ng-model=spot.photo3 accept="image/*" app-fileread></td></tr>
+				<tr><td>写真4</td><td><input type="file" ng-disabled="spot.facebook" ng-model=spot.photo4 accept="image/*" app-fileread></td></tr>
+				<tr><td>写真5</td><td><input type="file" ng-disabled="spot.facebook" ng-model=spot.photo5 accept="image/*" app-fileread></td></tr>
+				<tr><td>写真6</td><td><input type="file" ng-disabled="spot.facebook" ng-model=spot.photo6 accept="image/*" app-fileread></td></tr>
+				<tr><td>口コミ　Twitter</td><td><input type="checkbox" ng-click="getTwitterComments()" ng-model="twitter"/></td></tr>
+				<tr><td></td><td> 
+	    		<tt><select class="form-control" name="multipleSelect" id="multipleSelect" ng-model="spot.twitterComments" multiple>
+		      			<option value="{{twitterComments[1].text}}">{{twitterComments[1].text}}</option>
+		      			<option value="{{twitterComments[2].text}}">{{twitterComments[2].text}}</option>
+		      			<option value="{{twitterComments[3].text}}">{{twitterComments[3].text}}</option>
+	    			</select></tt><br>
+	    		<tt>{{spot.twitterComments}}</tt><br/></td></tr>
+				<tr><td>Instagramの写真</td><td><input type="checkbox" ng-click="getImages()" ng-model="instagram"/></td></tr>
+			</tbody>
+		</table>
+		
+		<!-- 写真選択 -->
+		<div ng-show="instagram">
+			<ul>
+			  <li><input type="checkbox" id="cb1" ng-model="spot.photo1" ng-click="setImages('photo1', images[1].display_src)" />
+			    <label for="cb1" ><img class="fadeImage" src="{{images[1].display_src}}" class="img-thumbnail">
+			    <label><a href="{{images[11].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
+			   </label>
+			 </li>
+			
+			  <li><input type="checkbox" id="cb2" ng-model="spot.photo2" ng-click="setImages('photo2', images[2].display_src)" />
+			    <label for="cb2" ><img class="fadeImage"src="{{images[2].display_src}}" class="img-thumbnail">
+			    <label><a href="{{images[2].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
+			   </label>
+			 </li>
+			 
+			  <li><input type="checkbox" id="cb3" ng-model="spot.photo3" ng-click="setImages('photo3', images[3].display_src)" />
+			    <label for="cb3" ><img class="fadeImage" src="{{images[3].display_src}}" class="img-thumbnail">
+			    <label><a href="{{images[3].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
+			   </label>
+			 </li>
+			 
+			  <li><input type="checkbox" id="cb4" ng-model="spot.photo1" ng-click="setImages('photo4', images[4].display_src)" />
+			    <label for="cb4" ><img class="fadeImage" src="{{images[4].display_src}}" class="img-thumbnail">
+			    <label><a href="{{images[4].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
+			   </label>
+			 </li>
+			 
+			  <li><input type="checkbox" id="cb5" ng-model="spot.photo5" ng-click="setImages('photo5', images[5].display_src)" />
+			    <label for="cb5" ><img class="fadeImage" src="{{images[5].display_src}}" class="img-thumbnail">
+			    <label><a href="{{images[11].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
+			   </label>
+			 </li>
+			 
+			  <li><input type="checkbox" id="cb6" ng-model="spot.photo6" ng-click="setImages('photo6', images[6].display_src)" />
+			    <label for="cb6" ><img class="fadeImage" src="{{images[1].display_src}}" class="img-thumbnail">
+			    <label><a href="{{images[11].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
+			   </label>
+			 </li>
+			 
+			  <li><input type="checkbox" id="cb7" ng-model="spot.photo7" ng-click="setImages('photo7', images[7].display_src)" />
+			    <label for="cb7" ><img class="fadeImage" src="{{images[7].display_src}}" class="img-thumbnail">
+			    <label><a href="{{images[7].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
+			   </label>
+			 </li>
+			
+			  <li><input type="checkbox" id="cb8" ng-model="spot.photo8" ng-click="setImages('photo8', images[8].display_src)" />
+			    <label for="cb8" ><img class="fadeImage" src="{{images[8].display_src}}" class="img-thumbnail">
+			    <label><a href="{{images[8].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
+			   </label>
+			 </li>
+			 
+			  <li><input type="checkbox" id="cb9" ng-model="spot.photo9" ng-click="setImages('photo9', images[9].display_src)" />
+			    <label for="cb9" ><img class="fadeImage" src="{{images[1].display_src}}" class="img-thumbnail">
+			    <label><a href="{{images[9].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
+			   </label>
+			 </li>
+			
+			  <li><input type="checkbox" id="cb10" ng-model="spot.photo10" ng-click="setImages('photo10', images[10].display_src)" />
+			    <label for="cb10" ><img class="fadeImage" src="{{images[10].display_src}}" class="img-thumbnail">
+			    <label><a href="{{images[10].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
+			   </label>
+			 </li>
+			</ul>
+		</div>
+		<button class="btn btn-info" style="margin-top: 20px; margin-bottom: 20px;"  ng-click="deselect()" >クリア</button>
+		<button class="btn btn-primary" style="margin-top: 20px; margin-bottom: 20px; margin-left: 30px;" ng-click="addSpot()">このスポットを登録する</button>
+		<!-- <td><button class="btn btn-info" ng-click="update()">Update</button></td> -->
+	</div>
+	</body>
+	<script type="text/javascript">
+		$(document).ready(function(){
+	    	$(".fadeImage").click(function(){
+		        $(this).fadeTo("slow", 0.15);
+		        $(this).content = "This is some text";
+	    	});
+		});
+	</script>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html ng-app="mataTabi">
+<head>
+	<title>User Registration</title>
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+</head>
+
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+<script src="controllers/controller.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="js/lightbox.min.js"></script>
+
+<div class="container" ng-controller="AppCtrl">
+    <center>
+    	<h1>手動ユーザー登録</h1>
+    	<table class="table" style="table-layout: fixed; align: center;">
+		    <thead>
+                <tr>
+                    <th class="col-sm-1"></th>
+                    <th class="col-sm-4"></th>
+                </tr>
+            </thead>
+		    <tbody>
+                <tr><td>ユーザー名<input class="form-control" ng-model=user.username></td></tr>
+                <tr><td>パスワード<input type="password" class="form-control" ng-model=user.password></td></tr>
+                <tr>
+                    <td>
+                        <button class="btn btn-primary" style="margin-top: 20px; margin-bottom: 20px; margin-left: 30px;" ng-click="addUser()">
+                            登録
+                        </button>
+                    </td>
+                </tr>
+		    </tbody>
+	    </table>
+    </center>
+</div>
+
+</body>
+</html>

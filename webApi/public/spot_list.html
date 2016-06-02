@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="favicon.ico">
 
-	<title>Admin Spot List</title>
+	<title>スポットリスト</title>
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
@@ -68,7 +68,7 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active">
+            <li>
                 <a href="#" ng-click="openControl()">
                     <span class="glyphicon glyphicon-cog" aria-hidden=true>コントロールパネル</span>
                 </a>
@@ -78,7 +78,7 @@
                     <span class="glyphicon glyphicon-plus" aria-hidden=true>ユーザー登録(管理者)</span>
                 </a>
             </li>
-            <li>
+            <li class="active">
                 <a href="#" ng-click="openSpotList()">
                     <span class="glyphicon glyphicon-list" aria-hidden=true>スポット一覧</span>
                 </a>
@@ -98,61 +98,331 @@
     </div>
 
 <div class="container-fluid" ng-controller="AppCtrl" >
-  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="height:700px; width:1200px; overflow:auto;">
 	<h1>スポットリスト</h1>
 	<button class="btn btn-primary" ng-click="openNew()">Add New Spot</button>
 	<table class="table table-condensed table-striped">
 		<thead>
 			<tr>
-				<th class="col-sm-2">スポット名</th>
-				<th class="col-sm-2">スポット位置</th>
-				<th class="col-sm-2">登録日</th>
-				<th class="col-sm-2">説明（日本語）</th>
-				<th class="col-sm-2">説明（英語）</th>
-				<th class="col-sm-2">説明（中国語）</th>
-				<th class="col-sm-2">説明（韓国語）</th>
-				<th class="col-sm-2">口コミ（日本語）</th>
-				<th class="col-sm-2">口コミ（英語）</th>
-				<th class="col-sm-2">口コミ（中国語）</th>
-				<th class="col-sm-2">口コミ（韓国語）</th>
+				<th class="col-sm-1">スポット名</th>
+				<th class="col-sm-1">スポット位置</th>
+				<th class="col-sm-1">登録日</th>
+				<th class="col-sm-1">説明(日本語)</th>
+				<th class="col-sm-1">説明(英語)</th>
+				<th class="col-sm-1">説明(中国語)</th>
+				<th class="col-sm-1">説明(韓国語)</th>
+				<th class="col-sm-1">口コミ(日本語)</th>
+				<th class="col-sm-1">口コミ(英語)</th>
+				<th class="col-sm-1">口コミ(中国語)</th>
+				<th class="col-sm-1">口コミ(韓国語)</th>
 				<th class="col-sm-8">写真</th>
+                <th class="col-sm-8">Twitter口コミ</th>
+                <th class="col-sm-12">Facebookメッセージ</th>
+                <th class="col-sm-12">Facebook画像</th>
+                <th class="col-sm-12">インスタグラム画像</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="spot in spotlist">
-				<td>{{spot.name}}</td>
-				<td>{{spot.location}}</td>
-				<td>{{spot.date}}</td>
-				<td>{{spot.description_japanese}}</td>
-				<td>{{spot.description_english}}</td>
-				<td>{{spot.description_chinese}}</td>
-				<td>{{spot.description_korean}}</td>
-				<td>{{spot.comment_japanese}}</td>
-				<td>{{spot.comment_english}}</td>
-				<td>{{spot.comment_chinese}}</td>
-				<td>{{spot.comment_korean}}</td>
+				<td>
+                    <div style="height:50px; width:100px; overflow-x:auto;">
+                        {{spot.name}}
+                    <div>
+                </td>
+				<!-- <td>{{spot.location}}</td> --!>
+                <td>
+                    <div style="height:50px; width:100px; overflow-x:auto;">
+                        {{spot.lat}}
+                    </div>
+                </td> <!--Changed based on add spot page code --!>
+				<td>
+                    <div style="height:50px; width:80px; overflow-x:auto;">
+                        {{spot.date}}
+                    </div>
+                </td>
+				<td>
+                    <div style="height:50px; width:250px; overflow-x:auto;">
+                        {{spot.description_japanese}}
+                    </div>
+                </td>
+				<td>
+                    <div style="height:50px; width:250px; overflow-x:auto;">
+                        {{spot.description_english}}
+                    </div>
+                </td>
+				<td>
+                    <div style="height:50px; width:250px; overflow-x:auto;">
+                        {{spot.description_chinese}}
+                    </div>
+                </td>
+				<td>
+                    <div style="height:50px; width:250px; overflow-x:auto;">
+                        {{spot.description_korean}}
+                    </div>
+                </td>
+				<td>
+                    <div style="height:50px; width:250px; overflow-x:auto;">
+                        {{spot.comment_japanese}}
+                    </div>
+                </td>
+				<td>
+                    <div style="height:50px; width:250px; overflow-x:auto;">
+                        {{spot.comment_english}}
+                    </div>
+                </td>
+				<td>
+                    <div style="height:50px; width:250px; overflow-x:auto;">
+                        {{spot.comment_chinese}}
+                    </div>
+                </td>
+				<td>
+                    <div style="height:50px; width:250px; overflow-x:auto;">
+                        {{spot.comment_korean}}
+                    </div>
+                </td>
 
-				<td><div class="gallery">
+				<td>
+                    <div class="gallery">
 						<!--row1 -->
 						<div class="row">
-							<div> <a href="{{spot.photo1}}" data-title="first" data-lightbox="vacation"><img src="{{spot.photo1}}" width="200px" class="img-thumbnail"></a> 
+							<div>
+                                <a href="{{spot.photo1}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{spot.photo1}}" width="200px" class="img-thumbnail">
+                                </a> 
 							</div>
-							<div> <a href="{{spot.photo2}}" data-title="second" data-lightbox="vacation"><img src="{{spot.photo2}}" width="200px" class="img-thumbnail"></a> 
+							<div>
+                                <a href="{{spot.photo2}}" data-title="second" data-lightbox="vacation">
+                                    <img src="{{spot.photo2}}" width="200px" class="img-thumbnail">
+                                </a> 
 							</div>
-							<div > <a href="{{spot.photo3}}" data-title="third" data-lightbox="vacation"><img src="{{spot.photo3}}" width="200px" class="img-thumbnail"></a> 
+							<div>
+                                <a href="{{spot.photo3}}" data-title="third" data-lightbox="vacation">
+                                    <img src="{{spot.photo3}}" width="200px" class="img-thumbnail">
+                                </a> 
 							</div>
 						</div>
 						<!--row2 -->
 						<div class="row">
-							<div> <a href="{{spot.photo4}}" data-title="first" data-lightbox="vacation"><img src="{{spot.photo4}}" width="200px" class="img-thumbnail"></a> 
+							<div>
+                                <a href="{{spot.photo4}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{spot.photo4}}" width="200px" class="img-thumbnail">
+                                </a> 
 							</div>
-							<div> <a href="{{spot.photo5}}" data-title="second" data-lightbox="vacation"><img src="{{spot.photo5}}" width="200px" class="img-thumbnail"></a> 
+							<div>
+                                <a href="{{spot.photo5}}" data-title="second" data-lightbox="vacation">
+                                    <img src="{{spot.photo5}}" width="200px" class="img-thumbnail">
+                                </a> 
 							</div>
-							<div> <a href="{{spot.photo6}}" data-title="third" data-lightbox="vacation"><img src="{{spot.photo6}}" width="200px" class="img-thumbnail"></a> 
+							<div>
+                                <a href="{{spot.photo6}}" data-title="third" data-lightbox="vacation">
+                                    <img src="{{spot.photo6}}" width="200px" class="img-thumbnail">
+                                </a> 
 							</div>
 						</div>
+                        <div class="row">
+                            <div>
+                                <a href="{{spot.photo7}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{spot.photo7}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{spot.photo8}}" data-title="second" data-lightbox="vacation">
+                                    <img src="{{spot.photo8}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{spot.photo9}}" data-title="third" data-lightbox="vacation">
+                                    <img src="{{spot.photo9}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{spot.photo10}}" data-title="third" data-lightbox="vacation">
+                                    <img src="{{spot.photo10}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                        </div>
 					</div>
 				</td>
+
+                <td><!--Twitterの口コミ--!>
+                    <div class="gallery">
+                        <!--row1 -->
+                        <div class="row">
+                            <div>{{twitter_comments[1].text}}</div>
+                            <div>{{twitter_comments[2].text}}</div>
+                            <div>{{twitter_comments[3].text}}</div>
+                            <div>{{twitter_comments[4].text}}</div>
+                            <div>{{twitter_comments[5].text}}</div>
+                            <div>{{twitter_comments[6].text}}</div>
+                        </div>
+                    </div> 
+                </td>
+
+                <td><!--Facebookメッセージ--!>
+                    <div class="gallery">
+                        <!--row1 -->
+                        <div class="row">
+                            <div style="height:50px; width:250px; overflow-x:auto;">
+                                {{facebook_data[1].message}} 作成日時:{{facebook_data[1].created_time}}
+                            </div>
+                            <div style="height:50px; width:250px; overflow-x:auto;">
+                                {{facebook_data[2].message}} 作成日時:{{facebook_data[2].created_time}}
+                            </div>
+                            <div style="height:50px; width:250px; overflow-x:auto;">
+                                {{facebook_data[3].message}} 作成日時:{{facebook_data[3].created_time}}
+                            </div>
+                            <div style="height:50px; width:250px; overflow-x:auto;">
+                                {{facebook_data[4].message}} 作成日時:{{facebook_data[4].created_time}}
+                            </div>
+                            <div style="height:50px; width:250px; overflow-x:auto;">
+                                {{facebook_data[5].message}} 作成日時:{{facebook_data[5].created_time}}
+                            </div>
+                            <div style="height:50px; width:250px; overflow-x:auto;">
+                                {{facebook_data[6].message}} 作成日時:{{facebook_data[6].created_time}}
+                            </div>
+                            <div style="height:50px; width:250px; overflow-x:auto;">
+                                {{facebook_data[7].message}} 作成日時:{{facebook_data[7].created_time}}
+                            </div>
+                            <div style="height:50px; width:250px; overflow-x:auto;">
+                                {{facebook_data[8].message}} 作成日時:{{facebook_data[8].created_time}}
+                            </div>
+                            <div style="height:50px; width:250px; overflow-x:auto;">
+                                {{facebook_data[9].message}} 作成日時:{{facebook_data[9].created_time}}
+                            </div>
+                            <div style="height:50px; width:250px; overflow-x:auto;">
+                                {{facebook_data[10].message}} 作成日時:{{facebook_data[10].created_time}}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+
+                <td><!-- Facebook画像 --!>
+                    <div class="gallery">
+                        <!--row1 -->
+                        <div class="row">
+                            <div>
+                                <a href="{{facebook_data[1].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[1].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[2].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[2].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[3].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[3].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[3].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[3].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[4].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[4].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[5].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[5].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[6].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[6].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[7].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[7].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[8].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[8].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[9].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[9].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[10].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[10].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </td>
+
+                <td><!-- Facebook画像 --!>
+                    <div class="gallery">
+                        <!--row1 -->
+                        <div class="row">
+                            <div>
+                                <a href="{{facebook_data[1].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[1].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[2].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[2].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[3].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[3].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[3].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[3].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[4].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[4].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[5].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[5].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[6].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[6].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[7].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[7].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[8].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[8].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[9].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[9].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{facebook_data[10].full_picture}}" data-title="first" data-lightbox="vacation">
+                                    <img src="{{facebook_data[10].full_picture}}" width="200px" class="img-thumbnail">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+    
 				<td>&nbsp;</td>
 				<td><button class="btn btn-danger" ng-click="remove(spot._id)">Remove</button></td>
 				<td><button class="btn btn-warning" ng-click="edit(spot._id)">Edit</button></td>

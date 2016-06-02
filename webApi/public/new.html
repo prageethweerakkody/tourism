@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html ng-app="mataTabi">
-<head>
+	<head>
 	<title>spot registration</title>
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -11,6 +11,7 @@
 	<!--lightbox -->
 	<link rel="stylesheet" type="text/css" href="css/lightbox.css">
 	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-social.css">
 	
 	</head>
 	<body>
@@ -25,262 +26,231 @@
 
 	<div class="container" ng-controller="AppCtrl" >
 		<h1>スポット登録</h1>
-		<label>
-			<input type="radio" ng-model=spot.entry value="new" ng-change="reload()" >
-			新規登録（instagram/twitter）
-		</label>
-		<label>
-			<input type="radio" ng-model=spot.entry value="facebook" ng-change="reload()">
+
+	<div align="right">
+		<label  style="width: 200px;" >
+			<input type="radio" ng-model=spot.entry value="facebook" ng-change="openFacebook()">
 			新規登録（facebook）
 		</label>
-		<table class="table" style="table-layout: fixed;">  
-			<thead>
-				<tr>
-					<th class="col-sm-1"></th>
-					<th class="col-sm-4"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-show="spot.entry"><td>スポット名</td><td><input class="form-control" ng-model=spot.name></td></tr>
-					<!-- location search -->
-				<tr ng-show="spot.entry == 'new' "><td>位置検索</td>
-					<td><input type="text" id="my-address">
-	 					<button class="btn btn-info" id="getCords" ng-click="codeAddress()">検索</button>
-						<div id="out"></div>
-						<input type="hidden" id="lat" readonly></input>
-						<input type="hidden" id="lon" readonly></input>
-						<ul id="plus-location" class ="hidden">
-							<li><input type="checkbox" id="cb501"   ng-model="spot.lat" ng-click="addLocation()" />
-			    				<label for="cb501" >この位置情報を登録する<img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>
-							</li>
-						</ul>
-					</td>
-				</tr>
-				<tr ng-show="spot.entry"><td>スポットタグ</td><td><input class="form-control" ng-model=spot.tag_spot></td></tr>
-				<tr ng-show="spot.entry == 'new' "><td>スポットタグinstagram用</td><td><input class="form-control" ng-model=spot.tag_instagram></td></tr>
-				<tr ng-show="spot.entry"><td>スポット登録日</td><td><input class="form-control" ng-disabled="spot.facebook" ng-model=spot.date></td></tr>
-				<!--添付ファイル -->
-				<tr ng-show="spot.entry == 'new' "><td>写真1</td><td><input type="file"  ng-model=spot.photo1 accept="image/*" app-fileread></td></tr>
-				<tr ng-show="spot.entry == 'new' "><td>写真2</td><td><input type="file"  ng-model=spot.photo2 accept="image/*" app-fileread></td></tr>
-				<tr ng-show="spot.entry == 'new' "><td>写真3</td><td><input type="file"  ng-model=spot.photo3 accept="image/*" app-fileread></td></tr>
-				<tr ng-show="spot.entry == 'new' "><td>写真4</td><td><input type="file"  ng-model=spot.photo4 accept="image/*" app-fileread></td></tr>
-				<tr ng-show="spot.entry == 'new' "><td>写真5</td><td><input type="file"  ng-model=spot.photo5 accept="image/*" app-fileread></td></tr>
-				<tr ng-show="spot.entry == 'new' "><td>写真6</td><td><input type="file"  ng-model=spot.photo6 accept="image/*" app-fileread></td></tr>
+	</div>
 
-				<!-- twitter コメント-->
-				<tr ng-show="spot.entry == 'new' "><td>口コミ　Twitter</td><td><input type="checkbox" ng-click="getTwitterComments()" ng-model="twitter"/></td></tr>
-				<tr ng-show="twitter"><td></td>
-					<td> 
-			    		<tt><select size="5" position="absolute"  class="form-control" name="multipleSelect" id="multipleSelect" ng-model="spot.twitter_comments" multiple>
-				      			<option value="{{twitter_comments[1].text}}">{{twitter_comments[1].text}}</option>
-				      			<option value="{{twitter_comments[2].text}}">{{twitter_comments[2].text}}</option>
-				      			<option value="{{twitter_comments[3].text}}">{{twitter_comments[3].text}}</option>
-				      			<option value="{{twitter_comments[4].text}}">{{twitter_comments[4].text}}</option>
-				      			<option value="{{twitter_comments[5].text}}">{{twitter_comments[5].text}}</option>
-			    			</select></tt><br>
-			    		<tt>{{spot.twitter_comments}}</tt><br/>
-			    	</td>
-	    		</tr>
+	<label style="width: 200px;">
+		<input id="cb001" type="checkbox" ng-click="getTwitterComments()" ng-model="twitter"/>
+		<label class="btn btn-block btn-social btn-twitter" for="cb001" >twitter データ取得<img  id="location" src="http://icons.iconarchive.com/icons/limav/flat-gradient-social/512/Twitter-icon.png"></label>
+	</label>
 
-	    		<!--facebook メッセージ-->
-	    		<tr ng-show="spot.entry == 'facebook' "><td>facebookデータ取得</td><td><input type="checkbox" ng-click="getFacebookData()" ng-model=facebook></td></tr>
-	    		<tr ng-show="facebook"><td>facebookメッセージ選択</td>
-	    			<td>
-		    			<tt>
-			    			<select size="10" position="absolute" class="form-control" name="fbMessageSelect" id="fbMessageSelect" ng-model="spot.facebook_message" ng-change="setFacebookMessage(spot.facebook_message)"multiple>
-			    				<option value="{{facebook_data[1].message}}">{{facebook_data[1].message}}</option>
-			    				<option value="{{facebook_data[2].message}}">{{facebook_data[2].message}}</option>
-			    				<option value="{{facebook_data[3].message}}">{{facebook_data[3].message}}</option>
-			    				<option value="{{facebook_data[4].message}}">{{facebook_data[4].message}}</option>
-			    				<option value="{{facebook_data[5].message}}">{{facebook_data[5].message}}</option>
-			    				<option value="{{facebook_data[6].message}}">{{facebook_data[6].message}}</option>
-			    				<option value="{{facebook_data[7].message}}">{{facebook_data[7].message}}</option>
-			    				<option value="{{facebook_data[8].message}}">{{facebook_data[8].message}}</option>
-			    				<option value="{{facebook_data[9].message}}">{{facebook_data[9].message}}</option>
-			    				<option value="{{facebook_data[10].message}}">{{facebook_data[10].message}}</option>
-			    			</select>
-		    			</tt>
-	    			</td>
-	    		</tr>
-	    		<tr ng-show="spot.entry"><td>スポット説明（日本語）</td><td><textarea  id="fb-message" rows="3" class="form-control" ng-model=spot.description_japanese></textarea></td></tr>
-				<tr ng-show="spot.entry"><td>口コミ（日本語）</td><td><textarea rows="2" class="form-control" ng-disabled="spot.facebook" ng-model=spot.comment_japanese></textarea></td></tr>
-	    		<!-- facebook created time-->
-	    		<tr ng-show="facebook"><td>facebook作成日時選択</td>
-	    			<td>
-		    			<tt>
-			    			<select size="10" position="absolute" class="form-control" name="fbMessageSelect" id="fbMessageSelect" ng-model="spot.facebook_time" ng-change="setFacebookTime(spot.facebook_time)" multiple>
-			    				<option value="{{facebook_data[1].created_time}}">{{facebook_data[1].created_time}}</option>
-			    				<option value="{{facebook_data[2].created_time}}">{{facebook_data[2].created_time}}</option>
-			    				<option value="{{facebook_data[3].created_time}}">{{facebook_data[3].created_time}}</option>
-			    				<option value="{{facebook_data[4].created_time}}">{{facebook_data[4].created_time}}</option>
-			    				<option value="{{facebook_data[5].created_time}}">{{facebook_data[5].created_time}}</option>
-			    				<option value="{{facebook_data[6].created_time}}">{{facebook_data[6].created_time}}</option>
-			    				<option value="{{facebook_data[7].created_time}}">{{facebook_data[7].created_time}}</option>
-			    				<option value="{{facebook_data[8].created_time}}">{{facebook_data[8].created_time}}</option>
-			    				<option value="{{facebook_data[9].created_time}}">{{facebook_data[9].created_time}}</option>
-			    				<option value="{{facebook_data[10].created_time}}">{{facebook_data[10].created_time}}</option>
-			    			</select>
-		    			</tt>
-	    			</td>
-	    		</tr>
-				<tr ng-show="spot.entry == 'new' "><td>Instagramの写真</td><td><input type="checkbox" ng-click="getImages()" ng-model="instagram"/></td></tr>
-				<tr ng-show="spot.entry == 'facebook' "><td></td>
-					<td> 
-						<!-- facebook写真選択 -->
-						<div ng-show="facebook">
-							<ul>
-							  <li><input type="checkbox" id="cb1" ng-model="spot.photo1" ng-click="setImages('photo1', facebook_data[1].full_picture)" />
-							    <label for="cb1" ><img class="fadeImage" src="{{facebook_data[1].full_picture}}" class="img-thumbnail">
-							    <label><a href="{{facebook_data[1].full_picture}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-							   </label>
-							 </li>
+	<label style="width: 200px;">
+		<input id="cb002" type="checkbox" ng-click="getImages()" ng-model="instagram"/>
+		<label class="btn btn-block btn-social btn-instagram" for="cb002" >Instagramの写真取得<img  id="location" src="https://www.seeklogo.net/wp-content/uploads/2015/07/instagram-flat-icon-circle-image.png"></label>
+	</label>
+			
+	<table class="table" style="table-layout: fixed;">  
+		<thead>
+			<tr>
+				<th class="col-sm-1"></th>
+				<th class="col-sm-4"></th>
+			</tr>
+		</thead>
+		<tbody>
+		<tr ng-show="instagram" ><td></td><td>
+    			<!-- instagram 写真選択 -->
+				<div >
+					<ul>
+						<li>
+						   <label><a href="{{images[1].display_src}}" data-title="third" data-lightbox="vacation"><img id="p1" src="{{images[1].display_src}}" class="img-thumbnail"></a>
+						   <ul style="margin-left: -60px">
+						    	<li>
+						    	<input type="checkbox" id="cb601"   ng-model="spot.photo1" ng-click="setImages('photo1', images[1].display_src, 'true', 'p1')"/>
+						 		<label for="cb601" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+						    	</li>
+						    	<li style="margin-left: -30px">
+						    	<input type="checkbox" id="cb602"   ng-model="spot.photo1" ng-click="setImages('photo1', images[1].display_src, 'false', 'p1')"/>
+						 		<label for="cb602" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+						    	</li>
+						    </ul>
+						</li>
 
-							  <li><input type="checkbox" id="cb2" ng-model="spot.photo2" ng-click="setImages('photo2', facebook_data[2].full_picture)" />
-							    <label for="cb2" ><img class="fadeImage" src="{{facebook_data[2].full_picture}}" class="img-thumbnail">
-							    <label><a href="{{facebook_data[2].full_picture}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-							   </label>
-							 </li>
+						<li>
+						   <label><a href="{{images[2].display_src}}" data-title="third" data-lightbox="vacation"><img id="p2" src="{{images[2].display_src}}" class="img-thumbnail"></a>
+						   <ul style="margin-left: -60px">
+						    	<li>
+						    	<input type="checkbox" id="cb603"   ng-model="spot.photo2" ng-click="setImages('photo2', images[2].display_src, 'true', 'p2')"/>
+						 		<label for="cb603" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+						    	</li>
+						    	<li style="margin-left: -30px">
+						    	<input type="checkbox" id="cb604"   ng-model="spot.photo2" ng-click="setImages('photo2', images[2].display_src, 'false', 'p2')"/>
+						 		<label for="cb604" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+						    	</li>
+						    </ul>
+						</li>
 
-							  <li><input type="checkbox" id="cb3" ng-model="spot.photo3" ng-click="setImages('photo3', facebook_data[3].full_picture)" />
-							    <label for="cb3" ><img class="fadeImage" src="{{facebook_data[3].full_picture}}" class="img-thumbnail">
-							    <label><a href="{{facebook_data[3].full_picture}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-							   </label>
-							 </li>
+						<li>
+						   <label><a href="{{images[3].display_src}}" data-title="third" data-lightbox="vacation"><img id="p3" src="{{images[3].display_src}}" class="img-thumbnail"></a>
+						   <ul style="margin-left: -60px">
+						    	<li>
+						    	<input type="checkbox" id="cb605"   ng-model="spot.photo3" ng-click="setImages('photo3', images[3].display_src, 'true', 'p3')"/>
+						 		<label for="cb605" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+						    	</li>
+						    	<li style="margin-left: -30px">
+						    	<input type="checkbox" id="cb606"   ng-model="spot.photo3" ng-click="setImages('photo3', images[3].display_src, 'false', 'p3')"/>
+						 		<label for="cb606" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+						    	</li>
+						    </ul>
+						</li>
 
-							    <li><input type="checkbox" id="cb4" ng-model="spot.photo4" ng-click="setImages('photo4', facebook_data[4].full_picture)" />
-							    <label for="cb4" ><img class="fadeImage" src="{{facebook_data[4].full_picture}}" class="img-thumbnail">
-							    <label><a href="{{facebook_data[4].full_picture}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-							   </label>
-							 </li>
+						<li>
+						   <label><a href="{{images[4].display_src}}" data-title="third" data-lightbox="vacation"><img id="p4" src="{{images[4].display_src}}" class="img-thumbnail"></a>
+						   <ul style="margin-left: -60px">
+						    	<li>
+						    	<input type="checkbox" id="cb607"   ng-model="spot.photo4" ng-click="setImages('photo4', images[4].display_src, 'true', 'p4')"/>
+						 		<label for="cb607" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+						    	</li>
+						    	<li style="margin-left: -30px">
+						    	<input type="checkbox" id="cb608"   ng-model="spot.photo4" ng-click="setImages('photo4', images[4].display_src, 'false', 'p4')"/>
+						 		<label for="cb608" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+						    	</li>
+						    </ul>
+						</li>
 
-							   <li><input type="checkbox" id="cb5" ng-model="spot.photo5" ng-click="setImages('photo5', facebook_data[5].full_picture)" />
-							    <label for="cb5" ><img class="fadeImage" src="{{facebook_data[5].full_picture}}" class="img-thumbnail">
-							    <label><a href="{{facebook_data[5].full_picture}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-							   </label>
-							 </li>
+						<li>
+						   <label><a href="{{images[5].display_src}}" data-title="third" data-lightbox="vacation"><img id="p5" src="{{images[5].display_src}}" class="img-thumbnail"></a>
+						   <ul style="margin-left: -60px">
+						    	<li>
+						    	<input type="checkbox" id="cb609"   ng-model="spot.photo5" ng-click="setImages('photo5', images[5].display_src, 'true', 'p5')"/>
+						 		<label for="cb609" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+						    	</li>
+						    	<li style="margin-left: -30px">
+						    	<input type="checkbox" id="cb6010"   ng-model="spot.photo5" ng-click="setImages('photo5', images[5].display_src, 'false', 'p5')"/>
+						 		<label for="cb6010" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+						    	</li>
+						    </ul>
+						</li>
 
-							   <li><input type="checkbox" id="cb6" ng-model="spot.photo6" ng-click="setImages('photo6', facebook_data[6].full_picture)" />
-							    <label for="cb6" ><img class="fadeImage" src="{{facebook_data[6].full_picture}}" class="img-thumbnail">
-							    <label><a href="{{facebook_data[6].full_picture}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-							   </label>
-							 </li>
+						<li>
+						   <label><a href="{{images[6].display_src}}" data-title="third" data-lightbox="vacation"><img id="p6" src="{{images[6].display_src}}" class="img-thumbnail"></a>
+						   <ul style="margin-left: -60px">
+						    	<li>
+						    	<input type="checkbox" id="cb6011"   ng-model="spot.photo6" ng-click="setImages('photo6', images[6].display_src, 'true', 'p6')"/>
+						 		<label for="cb6011" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+						    	</li>
+						    	<li style="margin-left: -30px">
+						    	<input type="checkbox" id="cb6012"   ng-model="spot.photo6" ng-click="setImages('photo6', images[6].display_src, 'false', 'p6')"/>
+						 		<label for="cb6012" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+						    	</li>
+						    </ul>
+						</li>
 
-							   <li><input type="checkbox" id="cb7" ng-model="spot.photo7" ng-click="setImages('photo3', facebook_data[7].full_picture)" />
-							    <label for="cb7" ><img class="fadeImage" src="{{facebook_data[7].full_picture}}" class="img-thumbnail">
-							    <label><a href="{{facebook_data[7].full_picture}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-							   </label>
-							 </li>
+						<li>
+						   <label><a href="{{images[7].display_src}}" data-title="third" data-lightbox="vacation"><img id="p7" src="{{images[7].display_src}}" class="img-thumbnail"></a>
+						   <ul style="margin-left: -60px">
+						    	<li>
+						    	<input type="checkbox" id="cb6013"   ng-model="spot.photo7" ng-click="setImages('photo7', images[7].display_src, 'true', 'p7')"/>
+						 		<label for="cb6013" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+						    	</li>
+						    	<li style="margin-left: -30px">
+						    	<input type="checkbox" id="cb6014"   ng-model="spot.photo7" ng-click="setImages('photo7', images[7].display_src, 'false', 'p7')"/>
+						 		<label for="cb6014" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+						    	</li>
+						    </ul>
+						</li>
 
-							   <li><input type="checkbox" id="cb8" ng-model="spot.photo8" ng-click="setImages('photo8', facebook_data[8].full_picture)" />
-							    <label for="cb8" ><img class="fadeImage" src="{{facebook_data[8].full_picture}}" class="img-thumbnail">
-							    <label><a href="{{facebook_data[8].full_picture}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-							   </label>
-							 </li>
+						<li>
+						   <label><a href="{{images[8].display_src}}" data-title="third" data-lightbox="vacation"><img id="p8" src="{{images[8].display_src}}" class="img-thumbnail"></a>
+						   <ul style="margin-left: -60px">
+						    	<li>
+						    	<input type="checkbox" id="cb6015"   ng-model="spot.photo8" ng-click="setImages('photo8', images[8].display_src, 'true', 'p8')"/>
+						 		<label for="cb6015" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+						    	</li>
+						    	<li style="margin-left: -30px">
+						    	<input type="checkbox" id="cb6016"   ng-model="spot.photo8" ng-click="setImages('photo8', images[8].display_src, 'false', 'p8')"/>
+						 		<label for="cb6016" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+						    	</li>
+						    </ul>
+						</li>
 
-							   <li><input type="checkbox" id="cb9" ng-model="spot.photo9" ng-click="setImages('photo9', facebook_data[9].full_picture)" />
-							    <label for="cb9" ><img class="fadeImage" src="{{facebook_data[9].full_picture}}" class="img-thumbnail">
-							    <label><a href="{{facebook_data[9].full_picture}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-							   </label>
-							 </li>
+						<li>
+						   <label><a href="{{images[9].display_src}}" data-title="third" data-lightbox="vacation"><img id="p9" src="{{images[9].display_src}}" class="img-thumbnail"></a>
+						   <ul style="margin-left: -60px">
+						    	<li>
+						    	<input type="checkbox" id="cb6017"   ng-model="spot.photo9" ng-click="setImages('photo9', images[9].display_src, 'true', 'p9')"/>
+						 		<label for="cb6017" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+						    	</li>
+						    	<li style="margin-left: -30px">
+						    	<input type="checkbox" id="cb6018"   ng-model="spot.photo9" ng-click="setImages('photo9', images[9].display_src, 'false', 'p9')"/>
+						 		<label for="cb6018" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+						    	</li>
+						    </ul>
+						</li>
 
-							   <li><input type="checkbox" id="cb10" ng-model="spot.photo10" ng-click="setImages('photo10', facebook_data[10].full_picture)" />
-							    <label for="cb10" ><img class="fadeImage" src="{{facebook_data[10].full_picture}}" class="img-thumbnail">
-							    <label><a href="{{facebook_data[10].full_picture}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-							   </label>
-							 </li>
-
-							</ul>
-						</div>
-					</td>
-				</tr>
-				<tr ng-show="spot.entry"><td>スポット説明（英語）</td><td><textarea rows="3" class="form-control" ng-model=spot.description_english></textarea></td></tr>
-				<tr ng-show="spot.entry"><td>スポット説明（中国語）</td><td><textarea rows="3" class="form-control" ng-model=spot.description_chinese></textarea></td></tr>
-				<tr ng-show="spot.entry"><td>スポット説明（韓国語）</td><td><textarea rows="3" class="form-control" ng-disabled="spot.facebook" ng-model=spot.description_korean></textarea></td></tr>
-				<tr ng-show="spot.entry"><td>口コミ（英語）</td><td><textarea rows="2" class="form-control" ng-disabled="spot.facebook" ng-model=spot.comment_english></textarea></td></tr>
-				<tr ng-show="spot.entry"><td>口コミ（中国語）</td><td><textarea rows="2" class="form-control" ng-disabled="spot.facebook" ng-model=spot.comment_chinese></textarea></td></tr>
-				<tr ng-show="spot.entry"><td>口コミ（韓国語）</td><td><textarea rows="2" class="form-control" ng-disabled="spot.facebook" ng-model=spot.comment_korean></textarea></td></tr>
-				<tr><td></td><td><button ng-show="spot.entry" class="btn btn-primary" style="margin-top: 20px; margin-bottom: 20px; margin-left: 30px;" ng-click="addSpot()">このスポットを登録する</button></td></tr>
-			</tbody>
-		</table>
+						<li>
+						   <label><a href="{{images[10].display_src}}" data-title="third" data-lightbox="vacation"><img id="p10" src="{{images[10].display_src}}" class="img-thumbnail"></a>
+						   <ul style="margin-left: -60px">
+						    	<li>
+						    	<input type="checkbox" id="cb6019"   ng-model="spot.photo10" ng-click="setImages('photo10', images[10].display_src, 'true', 'p10')"/>
+						 		<label for="cb6019" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+						    	</li>
+						    	<li style="margin-left: -30px">
+						    	<input type="checkbox" id="cb6020"   ng-model="spot.photo10" ng-click="setImages('photo10', images[10].display_src, 'false', 'p10')"/>
+						 		<label for="cb6020" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+						    	</li>
+						    </ul>
+						</li>
+					</ul>
+				</div>
+    		</td></tr>
+    		<!-- twitter コメント-->
+			
+			</td></tr>
+			<tr ng-show="twitter"><td></td>
+				<td> 
+		    		<tt><select size="20" position="absolute"  class="form-control" name="multipleSelect" id="multipleSelect" ng-model="spot.twitter_comments" multiple>
+			      			<option ng-repeat="text in twitter_comments">{{text}}</option>
+		    			</select>
+		    			<label>{{spot.twitter_comments}}</label>
+		    		</tt><br>
+		    	</td>
+    		</tr>
+			<tr><td>スポット名</td><td><input class="form-control" ng-model=spot.name></td></tr>
+				<!-- location search -->
+			<tr><td>位置検索</td>
+				<td><input type="text" id="my-address">
+ 					<button class="btn btn-primary" id="getCords" ng-click="codeAddress()">検索</button>
+					<div id="out"></div>
+					<input type="hidden" id="lat" readonly></input>
+					<input type="hidden" id="lon" readonly></input>
+					<ul id="plus-location" class ="hidden">
+						<li><input type="checkbox" id="cb501"   ng-model="spot.lat" ng-click="addLocation()" />
+		    				<label for="cb501" >この位置情報を登録する<img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>
+						</li>
+					</ul>
+				</td>
+			</tr>
+			<tr><td>スポットタグ</td><td><input class="form-control" ng-model=spot.tag_spot></td></tr>
+			<tr><td>スポットタグinstagram用</td><td><input class="form-control" ng-model=spot.tag_instagram></td></tr>
+			<tr><td>スポット登録日</td><td><input class="form-control" ng-disabled="spot.facebook" ng-model=spot.date></td></tr>
+			
+    		<tr><td>スポット説明（日本語）</td><td><textarea  id="fb-message" rows="3" class="form-control" ng-model=spot.description_japanese></textarea></td></tr>		
+			<tr><td>スポット説明（英語）</td><td><textarea rows="3" class="form-control" ng-model=spot.description_english></textarea></td></tr>
+			<tr><td>スポット説明（中国語）</td><td><textarea rows="3" class="form-control" ng-model=spot.description_chinese></textarea></td></tr>
+			<tr><td>スポット説明（韓国語）</td><td><textarea rows="3" class="form-control" ng-disabled="spot.facebook" ng-model=spot.description_korean></textarea></td></tr>
+			<tr><td>口コミ（英語）</td><td><textarea rows="2" class="form-control" ng-disabled="spot.facebook" ng-model=spot.comment_english></textarea></td></tr>
+			<tr><td>口コミ（中国語）</td><td><textarea rows="2" class="form-control" ng-disabled="spot.facebook" ng-model=spot.comment_chinese></textarea></td></tr>
+			<tr><td>口コミ（韓国語）</td><td><textarea rows="2" class="form-control" ng-disabled="spot.facebook" ng-model=spot.comment_korean></textarea></td></tr>
+			<!--添付ファイル -->
+			<tr><td>写真1</td><td><input type="file"  ng-model=spot.photo_file1 accept="image/*" app-fileread></td></tr>
+			<tr><td>写真2</td><td><input type="file"  ng-model=spot.photo_file2 accept="image/*" app-fileread></td></tr>
+			<tr><td>写真3</td><td><input type="file"  ng-model=spot.photo_file3 accept="image/*" app-fileread></td></tr>
+			<tr><td></td>
+				<td>
+					<button class="btn btn-danger" ng-click="openControl()">キャンセル</button><button class="btn btn-primary" style="margin-top: 20px; margin-bottom: 20px; margin-left: 30px;" ng-click="addSpot()">このスポットを登録する</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 
 		<!-- <button ng-show="spot.entry" class="btn btn-info" style="margin-top: 20px; margin-bottom: 20px;"  ng-click="deselect()" >クリア</button>-->
-
-		
-		
-		<!-- 写真選択 -->
-		<div ng-show="instagram">
-			<ul>
-			  <li><input type="checkbox" id="cb1" ng-model="spot.photo1" ng-click="setImages('photo1', images[1].display_src)" />
-			    <label for="cb1" ><img class="fadeImage" src="{{images[1].display_src}}" class="img-thumbnail">
-			    <label><a href="{{images[11].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-			   </label>
-			 </li>
-			
-			  <li><input type="checkbox" id="cb2" ng-model="spot.photo2" ng-click="setImages('photo2', images[2].display_src)" />
-			    <label for="cb2" ><img class="fadeImage"src="{{images[2].display_src}}" class="img-thumbnail">
-			    <label><a href="{{images[2].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-			   </label>
-			 </li>
-			 
-			  <li><input type="checkbox" id="cb3" ng-model="spot.photo3" ng-click="setImages('photo3', images[3].display_src)" />
-			    <label for="cb3" ><img class="fadeImage" src="{{images[3].display_src}}" class="img-thumbnail">
-			    <label><a href="{{images[3].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-			   </label>
-			 </li>
-			 
-			  <li><input type="checkbox" id="cb4" ng-model="spot.photo1" ng-click="setImages('photo4', images[4].display_src)" />
-			    <label for="cb4" ><img class="fadeImage" src="{{images[4].display_src}}" class="img-thumbnail">
-			    <label><a href="{{images[4].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-			   </label>
-			 </li>
-			 
-			  <li><input type="checkbox" id="cb5" ng-model="spot.photo5" ng-click="setImages('photo5', images[5].display_src)" />
-			    <label for="cb5" ><img class="fadeImage" src="{{images[5].display_src}}" class="img-thumbnail">
-			    <label><a href="{{images[11].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-			   </label>
-			 </li>
-			 
-			  <li><input type="checkbox" id="cb6" ng-model="spot.photo6" ng-click="setImages('photo6', images[6].display_src)" />
-			    <label for="cb6" ><img class="fadeImage" src="{{images[1].display_src}}" class="img-thumbnail">
-			    <label><a href="{{images[11].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-			   </label>
-			 </li>
-			 
-			  <li><input type="checkbox" id="cb7" ng-model="spot.photo7" ng-click="setImages('photo7', images[7].display_src)" />
-			    <label for="cb7" ><img class="fadeImage" src="{{images[7].display_src}}" class="img-thumbnail">
-			    <label><a href="{{images[7].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-			   </label>
-			 </li>
-			
-			  <li><input type="checkbox" id="cb8" ng-model="spot.photo8" ng-click="setImages('photo8', images[8].display_src)" />
-			    <label for="cb8" ><img class="fadeImage" src="{{images[8].display_src}}" class="img-thumbnail">
-			    <label><a href="{{images[8].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-			   </label>
-			 </li>
-			 
-			  <li><input type="checkbox" id="cb9" ng-model="spot.photo9" ng-click="setImages('photo9', images[9].display_src)" />
-			    <label for="cb9" ><img class="fadeImage" src="{{images[1].display_src}}" class="img-thumbnail">
-			    <label><a href="{{images[9].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-			   </label>
-			 </li>
-			
-			  <li><input type="checkbox" id="cb10" ng-model="spot.photo10" ng-click="setImages('photo10', images[10].display_src)" />
-			    <label for="cb10" ><img class="fadeImage" src="{{images[10].display_src}}" class="img-thumbnail">
-			    <label><a href="{{images[10].display_src}}" data-title="third" data-lightbox="vacation"><button type="button" class="btn btn-success">preview</button></a></label>
-			   </label>
-			 </li>
-			</ul>
-		</div>
 		
 		<!-- <td><button class="btn btn-info" ng-click="update()">Update</button></td> -->
 	</div>
 	</body>
-	<script type="text/javascript">
-		$(document).ready(function(){
-	    	$(".fadeImage").click(function(){
-		        $(this).fadeTo("slow", 0.15);
-		        $(this).content = "This is some text";
-	    	});
-		});
-	</script>
 </html>

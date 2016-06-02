@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html ng-app="mataTabi">
+	<head>
+	<title>spot registration</title>
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+	<!--lightbox -->
+	<link rel="stylesheet" type="text/css" href="css/lightbox.css">
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-social.css">
+	</head>
+	<body>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+	<script src="controllers/controller.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="js/lightbox.min.js"></script>
+	<script type="text/javascript" 
+	        src="https://maps.googleapis.com/maps/api/js?v=3&amp;key=AIzaSyApUY508Q917TvPTwIiPYu0EhvEYQNJuDQ"></script>
+
+
+	<div class="container" ng-controller="AppCtrl" >
+		<h1>スポット登録</h1>
+		
+		<div align="right">
+		<label  style="width: 300px;" >
+			<input type="radio" ng-model=spot.entry value="new" ng-change="openNew()" >
+			新規登録（instagram/twitter）
+		</label>
+		</div>
+
+		<label style="width: 200px;">
+		<input id="cb01" type="checkbox" ng-click="getFacebookData()" ng-model=facebook>
+		<label class="btn btn-block btn-social btn-facebook" for="cb01" >facebook データ取得<img  id="location" src="https://worldvectorlogo.com/logos/facebook-icon-white.svg"></label>
+	</label>
+
+
+		<table class="table" style="table-layout: fixed;">  
+			<thead>
+				<tr>
+					<th class="col-sm-1"></th>
+					<th class="col-sm-4"></th>
+				</tr>
+			</thead>
+			<tbody>
+			<tr ng-show="facebook"><td></td>
+					<td> 
+						<!-- facebook写真選択 -->
+						<div>
+							<ul>
+							<li>
+							   <label><a href="{{facebook_data[1].full_picture}}" data-title="third" data-lightbox="vacation"><img id="f1" src="{{facebook_data[1].full_picture}}" class="img-thumbnail"></a>
+							   <ul style="margin-left: -60px">
+							    	<li>
+							    	<input type="checkbox" id="cb701"   ng-model="spot.photo1" ng-click="setImages('photo1', facebook_data[1].full_picture, 'true', 'f1')"/>
+							 		<label for="cb701" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+							    	</li>
+							    	<li style="margin-left: -30px">
+							    	<input type="checkbox" id="cb702"   ng-model="spot.photo1" ng-click="setImages('photo1', facebook_data[1].full_picture, 'false', 'f1')"/>
+							 		<label for="cb702" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+							    	</li>
+							    </ul>
+							</li>
+
+							<li>
+							   <label><a href="{{facebook_data[2].full_picture}}" data-title="third" data-lightbox="vacation"><img id="f2" src="{{facebook_data[2].full_picture}}" class="img-thumbnail"></a>
+							   <ul style="margin-left: -60px">
+							    	<li>
+							    	<input type="checkbox" id="cb703"   ng-model="spot.photo2" ng-click="setImages('photo2', facebook_data[2].full_picture, 'true', 'f2')"/>
+							 		<label for="cb703" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+							    	</li>
+							    	<li style="margin-left: -30px">
+							    	<input type="checkbox" id="cb704"   ng-model="spot.photo2" ng-click="setImages('photo2', facebook_data[1].full_picture, 'false', 'f2')"/>
+							 		<label for="cb704" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+							    	</li>
+							    </ul>
+							</li>
+
+							<li>
+							   <label><a href="{{facebook_data[3].full_picture}}" data-title="third" data-lightbox="vacation"><img id="f3" src="{{facebook_data[3].full_picture}}" class="img-thumbnail"></a>
+							   <ul style="margin-left: -60px">
+							    	<li>
+							    	<input type="checkbox" id="cb705"   ng-model="spot.photo3" ng-click="setImages('photo3', facebook_data[3].full_picture, 'true', 'f3')"/>
+							 		<label for="cb705" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+							    	</li>
+							    	<li style="margin-left: -30px">
+							    	<input type="checkbox" id="cb706"   ng-model="spot.photo3" ng-click="setImages('photo3', facebook_data[3].full_picture, 'false', 'f3')"/>
+							 		<label for="cb706" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+							    	</li>
+							    </ul>
+							</li>
+
+							<li>
+							   <label><a href="{{facebook_data[4].full_picture}}" data-title="third" data-lightbox="vacation"><img id="f4" src="{{facebook_data[4].full_picture}}" class="img-thumbnail"></a>
+							   <ul style="margin-left: -60px">
+							    	<li>
+							    	<input type="checkbox" id="cb707"   ng-model="spot.photo4" ng-click="setImages('photo4', facebook_data[4].full_picture, 'true', 'f4')"/>
+							 		<label for="cb707" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+							    	</li>
+							    	<li style="margin-left: -30px">
+							    	<input type="checkbox" id="cb708"   ng-model="spot.photo4" ng-click="setImages('photo4', facebook_data[1].full_picture, 'false', 'f4')"/>
+							 		<label for="cb708" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+							    	</li>
+							    </ul>
+							</li>
+
+							<li>
+							   <label><a href="{{facebook_data[5].full_picture}}" data-title="third" data-lightbox="vacation"><img id="f5" src="{{facebook_data[5].full_picture}}" class="img-thumbnail"></a>
+							   <ul style="margin-left: -60px">
+							    	<li>
+							    	<input type="checkbox" id="cb709"   ng-model="spot.photo5" ng-click="setImages('photo5', facebook_data[5].full_picture, 'true', 'f5')"/>
+							 		<label for="cb709" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+							    	</li>
+							    	<li style="margin-left: -30px">
+							    	<input type="checkbox" id="cb710"   ng-model="spot.photo5" ng-click="setImages('photo5', facebook_data[5].full_picture, 'false', 'f5')"/>
+							 		<label for="cb710" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+							    	</li>
+							    </ul>
+							</li>
+
+							<li>
+							   <label><a href="{{facebook_data[6].full_picture}}" data-title="third" data-lightbox="vacation"><img id="f6" src="{{facebook_data[6].full_picture}}" class="img-thumbnail"></a>
+							   <ul style="margin-left: -60px">
+							    	<li>
+							    	<input type="checkbox" id="cb711"   ng-model="spot.photo6" ng-click="setImages('photo6', facebook_data[6].full_picture, 'true', 'f6')"/>
+							 		<label for="cb711" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+							    	</li>
+							    	<li style="margin-left: -30px">
+							    	<input type="checkbox" id="cb712"   ng-model="spot.photo6" ng-click="setImages('photo6', facebook_data[6].full_picture, 'false', 'f6')"/>
+							 		<label for="cb712" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+							    	</li>
+							    </ul>
+							</li>
+
+							<li>
+							   <label><a href="{{facebook_data[7].full_picture}}" data-title="third" data-lightbox="vacation"><img id="f7" src="{{facebook_data[7].full_picture}}" class="img-thumbnail"></a>
+							   <ul style="margin-left: -60px">
+							    	<li>
+							    	<input type="checkbox" id="cb713"   ng-model="spot.photo7" ng-click="setImages('photo7', facebook_data[7].full_picture, 'true', 'f7')"/>
+							 		<label for="cb713" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+							    	</li>
+							    	<li style="margin-left: -30px">
+							    	<input type="checkbox" id="cb714"   ng-model="spot.photo7" ng-click="setImages('photo7', facebook_data[7].full_picture, 'false', 'f7')"/>
+							 		<label for="cb714" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+							    	</li>
+							    </ul>
+							</li>
+
+							<li>
+							   <label><a href="{{facebook_data[8].full_picture}}" data-title="third" data-lightbox="vacation"><img id="f8" src="{{facebook_data[8].full_picture}}" class="img-thumbnail"></a>
+							   <ul style="margin-left: -60px">
+							    	<li>
+							    	<input type="checkbox" id="cb715"   ng-model="spot.photo8" ng-click="setImages('photo8', facebook_data[8].full_picture, 'true', 'f8')"/>
+							 		<label for="cb715" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+							    	</li>
+							    	<li style="margin-left: -30px">
+							    	<input type="checkbox" id="cb716"   ng-model="spot.photo8" ng-click="setImages('photo8', facebook_data[8].full_picture, 'false', 'f8')"/>
+							 		<label for="cb716" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+							    	</li>
+							    </ul>
+							</li>
+
+							<li>
+							   <label><a href="{{facebook_data[9].full_picture}}" data-title="third" data-lightbox="vacation"><img id="f9" src="{{facebook_data[1].full_picture}}" class="img-thumbnail"></a>
+							   <ul style="margin-left: -60px">
+							    	<li>
+							    	<input type="checkbox" id="cb717"   ng-model="spot.photo9" ng-click="setImages('photo9', facebook_data[9].full_picture, 'true', 'f9')"/>
+							 		<label for="cb717" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+							    	</li>
+							    	<li style="margin-left: -30px">
+							    	<input type="checkbox" id="cb718"   ng-model="spot.photo9" ng-click="setImages('photo9', facebook_data[9].full_picture, 'false', 'f9')"/>
+							 		<label for="cb718" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+							    	</li>
+							    </ul>
+							</li>
+
+							<li>
+							   <label><a href="{{facebook_data[10].full_picture}}" data-title="third" data-lightbox="vacation"><img id="f10" src="{{facebook_data[10].full_picture}}" class="img-thumbnail"></a>
+							   <ul style="margin-left: -60px">
+							    	<li>
+							    	<input type="checkbox" id="cb719"   ng-model="spot.photo10" ng-click="setImages('photo10', facebook_data[10].full_picture, 'true', 'f10')"/>
+							 		<label for="cb719" ><img id="location" src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678092-sign-add-128.png"></label>	
+							    	</li>
+							    	<li style="margin-left: -30px">
+							    	<input type="checkbox" id="cb720"   ng-model="spot.photo10" ng-click="setImages('photo10', facebook_data[10].full_picture, 'false', 'f10')"/>
+							 		<label for="cb720" ><img id="remove-image" src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/07_minus-128.png"></label>
+							    	</li>
+							    </ul>
+							</li>
+
+						</ul>
+						</div>
+					</td>
+				</tr>
+				<!--facebook メッセージ-->
+	    		
+	    		<tr ng-show="facebook"><td>facebookメッセージ選択</td>
+	    			<td>
+		    			<tt>
+			    			<select size="10" position="absolute" class="form-control" name="fbMessageSelect" id="fbMessageSelect" ng-model="spot.facebook_message" ng-change="setFacebookMessage(spot.facebook_message)"multiple>
+			    				<option value="{{facebook_data[1].message}}">{{facebook_data[1].message}}</option>
+			    				<option value="{{facebook_data[2].message}}">{{facebook_data[2].message}}</option>
+			    				<option value="{{facebook_data[3].message}}">{{facebook_data[3].message}}</option>
+			    				<option value="{{facebook_data[4].message}}">{{facebook_data[4].message}}</option>
+			    				<option value="{{facebook_data[5].message}}">{{facebook_data[5].message}}</option>
+			    				<option value="{{facebook_data[6].message}}">{{facebook_data[6].message}}</option>
+			    				<option value="{{facebook_data[7].message}}">{{facebook_data[7].message}}</option>
+			    				<option value="{{facebook_data[8].message}}">{{facebook_data[8].message}}</option>
+			    				<option value="{{facebook_data[9].message}}">{{facebook_data[9].message}}</option>
+			    				<option value="{{facebook_data[10].message}}">{{facebook_data[10].message}}</option>
+			    			</select>
+		    			</tt><tt>{{spot.facebook_message}}</tt><br>
+	    			</td>
+	    		</tr>
+	    		<!-- facebook created time-->
+	    		<tr ng-show="facebook"><td>facebook作成日時選択</td>
+	    			<td>
+		    			<tt>
+			    			<select size="10" position="absolute" class="form-control" name="fbMessageSelect" id="fbMessageSelect" ng-model="spot.facebook_time" ng-change="setFacebookTime(spot.facebook_time)" multiple>
+			    				<option value="{{facebook_data[1].created_time}}">{{facebook_data[1].created_time}}</option>
+			    				<option value="{{facebook_data[2].created_time}}">{{facebook_data[2].created_time}}</option>
+			    				<option value="{{facebook_data[3].created_time}}">{{facebook_data[3].created_time}}</option>
+			    				<option value="{{facebook_data[4].created_time}}">{{facebook_data[4].created_time}}</option>
+			    				<option value="{{facebook_data[5].created_time}}">{{facebook_data[5].created_time}}</option>
+			    				<option value="{{facebook_data[6].created_time}}">{{facebook_data[6].created_time}}</option>
+			    				<option value="{{facebook_data[7].created_time}}">{{facebook_data[7].created_time}}</option>
+			    				<option value="{{facebook_data[8].created_time}}">{{facebook_data[8].created_time}}</option>
+			    				<option value="{{facebook_data[9].created_time}}">{{facebook_data[9].created_time}}</option>
+			    				<option value="{{facebook_data[10].created_time}}">{{facebook_data[10].created_time}}</option>
+			    			</select>
+		    			</tt>
+	    			</td>
+	    		</tr>
+				
+				
+				<tr><td>スポット名</td><td><input class="form-control" ng-model=spot.name></td></tr>
+				<tr><td>スポットタグ</td><td><input class="form-control" ng-model=spot.tag_spot></td></tr>
+				<tr><td>スポット登録日</td><td><input class="form-control" ng-disabled="spot.facebook" ng-model=spot.date></td></tr>
+				<tr><td>口コミ（英語）</td><td><textarea rows="2" class="form-control" ng-disabled="spot.facebook" ng-model=spot.comment_english></textarea></td></tr>
+				<tr><td>口コミ（中国語）</td><td><textarea rows="2" class="form-control" ng-disabled="spot.facebook" ng-model=spot.comment_chinese></textarea></td></tr>
+				<tr><td>口コミ（韓国語）</td><td><textarea rows="2" class="form-control" ng-disabled="spot.facebook" ng-model=spot.comment_korean></textarea></td></tr>
+				<tr>
+					<td></td>
+					<td>
+						<button class="btn btn-danger" ng-click="openControl()">キャンセル</button><button class="btn btn-primary" style="margin-top: 20px; margin-bottom: 20px; margin-left: 30px;" ng-click="addSpot()">このスポットを登録する</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<!-- <button ng-show="spot.entry" class="btn btn-info" style="margin-top: 20px; margin-bottom: 20px;"  ng-click="deselect()" >クリア</button>-->
+		
+		<!-- <td><button class="btn btn-info" ng-click="update()">Update</button></td> -->
+	</div>
+	</body>
+</html>

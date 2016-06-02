@@ -20,6 +20,8 @@ spotNamesPromise.then(function(spotObjectList) {
     return arg.facebook_url.replace("https://www.facebook.com/", "");
   });
 
+  assert(spotNamesList.length > 0, "No spot names found!")
+
   for (var i = 0; i < spotNamesList.length; i++) {
 
     var endpoint = "/" + spotNamesList[i] + "/posts?fields=id,message,created_time,full_picture";
@@ -42,3 +44,5 @@ spotNamesPromise.then(function(spotObjectList) {
   }
 
 });
+
+spotNamesPromise.catch(console.dir);

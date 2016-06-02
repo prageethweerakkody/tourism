@@ -118,8 +118,9 @@ mataTabi.controller('AppCtrl', function($scope, $http){
     };
 
     //ページリロード
-    $scope.reload = function(){
+    $scope.openFacebook = function(){
         $('#fb-time').val('');
+        window.location = 'new_facebook.html';
     };
 
     //スポット位置検索
@@ -162,97 +163,96 @@ mataTabi.controller('AppCtrl', function($scope, $http){
     };
 
     //選択した写真を登録処理
-    $scope.setImages = function(model,photo){
+    $scope.setImages = function(model,photo,condition,imageId){
         switch(model){
             case 'photo1':
-            $scope.spot.photo1 = photo;
+            if (condition == 'true') {
+                $scope.spot.photo1 = photo;
+                $('#' + imageId).fadeTo("slow", 0.15);
+            }else {
+                $scope.spot.photo1 = '';
+                $('#' + imageId).fadeTo("slow", 1);  
+            }
+            
             break;
-            case 'photo2':
-            $scope.spot.photo2 = photo;
+            case 'photo2':if (condition == 'true') {
+                $scope.spot.photo2 = photo;
+                $('#' + imageId).fadeTo("slow", 0.15);
+            }else {
+                $scope.spot.photo2 = '';
+                $('#' + imageId).fadeTo("slow", 1);  
+            }
             break;
             case 'photo3':
-            $scope.spot.photo3 = photo;
-            break;
+           if (condition == 'true') {
+                $scope.spot.photo3 = photo;
+                $('#' + imageId).fadeTo("slow", 0.15);
+            }else {
+                $scope.spot.photo3 = '';
+                $('#' + imageId).fadeTo("slow", 1);  
+            }            break;
             case 'photo4':
-            $scope.spot.photo4 = photo;
+            if (condition == 'true') {
+                $scope.spot.photo4 = photo;
+                $('#' + imageId).fadeTo("slow", 0.15);
+            }else {
+                $scope.spot.photo4 = '';
+                $('#' + imageId).fadeTo("slow", 1);  
+            }
             break;
             case 'photo5':
-            $scope.spot.photo5 = photo;
+            if (condition == 'true') {
+                $scope.spot.photo5 = photo;
+                $('#' + imageId).fadeTo("slow", 0.15);
+            }else {
+                $scope.spot.photo5 = '';
+                $('#' + imageId).fadeTo("slow", 1);  
+            }
             break;
             case 'photo6':
-            $scope.spot.photo6 = photo;
+          if (condition == 'true') {
+                $scope.spot.photo6 = photo;
+                $('#' + imageId).fadeTo("slow", 0.15);
+            }else {
+                $scope.spot.photo6 = '';
+                $('#' + imageId).fadeTo("slow", 1);  
+            }
             break;
             case 'photo7':
-            $scope.spot.photo7 = photo;
+           if (condition == 'true') {
+                $scope.spot.photo7 = photo;
+                $('#' + imageId).fadeTo("slow", 0.15);
+            }else {
+                $scope.spot.photo7 = '';
+                $('#' + imageId).fadeTo("slow", 1);  
+            }
             break;
             case 'photo8':
-            $scope.spot.photo8 = photo;
+            if (condition == 'true') {
+                $scope.spot.photo8 = photo;
+                $('#' + imageId).fadeTo("slow", 0.15);
+            }else {
+                $scope.spot.photo8 = '';
+                $('#' + imageId).fadeTo("slow", 1);  
+            }
             break;
             case 'photo9':
-            $scope.spot.photo9 = photo;
+            if (condition == 'true') {
+                $scope.spot.photo9 = photo;
+                $('#' + imageId).fadeTo("slow", 0.15);
+            }else {
+                $scope.spot.photo9 = '';
+                $('#' + imageId).fadeTo("slow", 1);  
+            }
             break; 
             case 'photo10':
-            $scope.spot.photo10 = photo;
-            break;
-            case 'photo11':
-            $scope.spot.photo11 = photo;
-            break;
-            case 'photo12':
-            $scope.spot.photo12 = photo;
-            break;
-            case 'photo13':
-            $scope.spot.photo13 = photo;
-            break;
-            case 'photo14':
-            $scope.spot.photo14 = photo;
-            break;
-            case 'photo15':
-            $scope.spot.photo15 = photo;
-            break;
-            case 'photo16':
-            $scope.spot.photo16 = photo;
-            break;
-            case 'photo17':
-            $scope.spot.photo17 = photo;
-            break;
-            case 'photo18':
-            $scope.spot.photo18 = photo;
-            break;
-            case 'photo19':
-            $scope.spot.photo19 = photo;
-            break;
-            case 'photo20':
-            $scope.spot.photo20 = photo;
-            break;
-            case 'photo21':
-            $scope.spot.photo21 = photo;
-            break;
-            case 'photo22':
-            $scope.spot.photo22 = photo;
-            break;
-            case 'photo23':
-            $scope.spot.photo23 = photo;
-            break;
-            case 'photo24':
-            $scope.spot.photo24 = photo;
-            break;
-            case 'photo25':
-            $scope.spot.photo25 = photo;
-            break;
-            case 'photo26':
-            $scope.spot.photo26 = photo;
-            break;
-            case 'photo27':
-            $scope.spot.photo27 = photo;
-            break;
-            case 'photo28':
-            $scope.spot.photo28 = photo;
-            break;
-            case 'photo29':
-            $scope.spot.photo29 = photo;
-            break;
-            case 'photo30':
-            $scope.spot.photo30 = photo;
+            if (condition == 'true') {
+                $scope.spot.photo10 = photo;
+                $('#' + imageId).fadeTo("slow", 0.15);
+            }else {
+                $scope.spot.photo10 = '';
+                $('#' + imageId).fadeTo("slow", 1);  
+            }
             break;
 
         }   
@@ -279,6 +279,7 @@ mataTabi.controller('AppCtrl', function($scope, $http){
         });
     };
 });
+
 
 
 //添付ファイル(写真)処理

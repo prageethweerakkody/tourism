@@ -25,6 +25,8 @@ spotNamesPromise.then(
 
   function(spotNamesList) {
 
+    assert(spotNamesList.length > 0, "No spot names found!")
+
     // hopefully instagram doesn't change this...
     var urlBase = "https://www.instagram.com/explore/tags/";
 

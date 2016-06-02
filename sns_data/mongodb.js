@@ -58,6 +58,8 @@ function findDocuments(url, collectionName, queryObject, queryParameters) {
 
 function storeUniqueData(currentList, dbURL, collectionName, fieldToCompare) {
 
+  assert(currentList.length > 0, "No data to store!");
+
   var params = {_id: 0};
   params[fieldToCompare] = 1;
 

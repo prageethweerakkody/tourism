@@ -111,7 +111,7 @@ app.get('/control', ensureAuthenticated, function(req, res){
     res.sendFile(__dirname + '/public/control.html');
 });
 
-app.get('/spotlist', ensureAuthenticated, function(req, res){
+app.get('/spotlist', function(req, res){
     console.log("get request");
 
     db.spotlist.find(function (err, docs){
@@ -133,7 +133,7 @@ app.get('/rawImageData', ensureAuthenticated, function(req, res){
 
 app.get('/rawTweetData', ensureAuthenticated, function(req, res){
 
-    db.rawTweetData.find(function (err, docs){
+    db.rawTweetData.find({} ,{text:1, _id:0},function (err, docs){
         console.log("rawTweetData");
         res.json(docs);
     });

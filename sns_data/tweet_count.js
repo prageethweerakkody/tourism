@@ -81,6 +81,8 @@ spotNamesPromise.then(function(spotObjectList) {
   // turn array of objects into array of names
   var spotNamesList = spotObjectList.map(function(arg){return arg.name;});
 
+  assert(spotNamesList.length > 0, "No spot names found!")
+
   // store tweet count for every spot name
   for (var i = 0; i < spotNamesList.length; i++) {countTweets(collectionName, spotNamesList[i]);}
 

@@ -34,7 +34,7 @@
   </head>
   <body>
 
-    <!-- トップナビゲーション --!>
+    <!-- トップナビゲーション -->
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container" ng-controller="AppCtrl">
         <div class="navbar-header">
@@ -42,12 +42,12 @@
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">また旅・管理</a>
+          <p class="navbar-brand">また旅・管理</p>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
          <!--<ul class="nav navbar-nav">
             <li class="active"><a href="#" ng-click="openControl()">コントロールパネル</a></li>
-          </ul> --!>
+          </ul> -->
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#" ng-click="logout()">ログアウト<span class="glyphicon glyphicon-off" aria-hidden=true></span></a></li>
           </ul>
@@ -60,120 +60,185 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li>
+            <li class="active">
                 <a href="#" ng-click="openControl()">
                     <span class="glyphicon glyphicon-cog" aria-hidden=true>コントロールパネル</span>
                 </a>
             </li>
-            <li class="active">
-                <a href="#" ng-click="openUserRegister()">
-                    <span class="glyphicon glyphicon-plus" aria-hidden=true>ユーザー登録(管理者)</span>
+            <li>
+                <a href="#" ng-click="openMyPage()">
+                    <span class="glyphicon glyphicon-cog" aria-hidden=true>マイページ</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" ng-click="openUserList()">
+                    <span class="glyphicon glyphicon-plus" aria-hidden=true>ユーザー一覧(管理者)</span>
                 </a>
             </li>
             <li>
                 <a href="#" ng-click="openSpotList()">
-                    <span class="glyphicon glyphicon-list" aria-hidden=true>スポット一覧</span>
+                    <span class="glyphicon glyphicon-list" aria-hidden=true>スポット一覧(管理者)</span>
                 </a>
             </li>
             <li>
-                <a href="#">
-                    <span class="glyphicon glyphicon-align-left" aria-hidden=true>アプリ情報登録</span>
+                <a href="#" ng-click="openAppList()">
+                    <span class="glyphicon glyphicon-align-left" aria-hidden=true>アプリ一覧(管理者)</span>
                 </a>
             </li>
-            <li>
+       <!-- <li>
                 <a href="#">
                     <span class="glyphicon glyphicon-question-sign" aria-hidden=true>連絡事項</span>
                 </a>
-            </li>
+            </li> -->
           </ul>
         </div>
 
-        <!-- メインコンテンツ --!>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <!-- メインコンテンツ -->
+        <div class="col-sm-offset-3">
             <h2>ユーザー登録</h2>
         </div>
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-5 main">
-          <label for="username-input">ユーザー名</label>
-          <div class="input-group">
-              <input type="text" class="form-control" id="username-input" ng-model=user.username> 
-          </div>
+        <!-- フォーム開始 -->
+        <form class="form-group">
+            <div class="col-sm-offset-3">
+              <table>
 
-          <br />
-          <label for="password-input">パスワード</label>
-          <div class="input-group">
-              <input type="password" class="form-control" id="password-input" ng-model=user.password>
-          </div>
+                <tr>
 
-          <br />
-          <label for="fullname-input">担当者名</label>
-          <div class="input-group">
-              <input type="text" class="form-control" id="fullname-input" ng-model=user.fullname>
-          </div>
+                  <td>
+                    <div>
+                      <label for="username-input">
+                          ユーザー名<span class="text-danger"> *必須* 同一名のユーザー名がすでに存在する場合は追加できません。</span>
+                      </label>
+                      <div class="input-group">
+                          <input type="text" class="form-control" id="username-input" data-language="ja" ng-model=user.username required>
+                      </div>
+                    </div>
+                  </td>
 
-          <br />
-          <label for="mail-input">メールアドレス</label>
-          <div class="input-group">
-              <input type="text" class="form-control" id="mail-input" ng-model=user.mail>
-          </div>
+                  <td>
+                    <div>
+                      <br />
+                      <label for="password-input">パスワード<span class="text-danger"> *必須</span></label>
+                      <div class="input-group">
+                          <input type="password" class="form-control" id="password-input" data-language="ja" ng-model=user.password required>
+                      </div>
+                    </div>
+                  </td>
 
-          <br />
-          <label for="facebook-input">FacebookURL</label>
-          <div class="input-group">
-              <input type="text" class="form-control" id="facebook-input" ng-model=user.facebook_url>
-          </div>
+                </tr>
+                <tr>
 
-          <br />
-          <label for="company-name-input">会社名</label>
-          <div class="input-group">
-              <input type="text" class="form-control" id="company-name-input" ng-model=user.company_name>
-          </div>
+                  <td>
+                    <br />
+                    <label for="select-app">アプリ名<span class="text-danger"> *必須</span></label>
+                    <br />
+                    <select id="select-app"
+                        ng-model="user.managed_app"
+                        ng-options="app as app.name for app in applist" required>
+                    </select>
+                    <br />
+                  </td>
 
-          <br />
-          <label for="company-name-ruby-input">会社名(ふりがな)</label>
-          <div class="input-group">
-              <input type="text" class="form-control" id="company-name-ruby-input" ng-model=user.company_name_ruby>
-          </div>
+                  <td>
+                    <br />
+                    <label for="fullname-input">担当者名</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="fullname-input" ng-model=user.fullname>
+                    </div>
+                  </td>
 
-          <br />
-          <label for="postal-code-input">郵便番号</label>
-          <div class="input-group">
-              <input type="text" class="form-control" id="postal-code-input" ng-model=user.postal_code>
-          </div>
+                </tr>
+                <tr>
 
-          <br />
-          <label for="address-input">住所</label>
-          <div class="input-group">
-              <input type="text" class="form-control" id="address-input" ng-model=user.address>
-          </div>
+                  <td>
+                    <br />
+                    <label for="mail-input">メールアドレス</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="mail-input" ng-model=user.mail>
+                    </div>
+                  </td>
 
-          <br />
-          <label for="phone-number-input">電話番号</label>
-          <div class="input-group">
-              <input type="text" class="form-control" id="phone-number-input" ng-model=user.phone_number>
-          </div>
+                  <td>
+                    <br />
+                    <label for="facebook-input">FacebookURL</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="facebook-input" ng-model=user.facebook_url>
+                    </div>
+                  </td>
 
-          <br />
-          <label for="fax-number-input">FAX番号</label>
-          <div class="input-group">
-              <input type="text" class="form-control" id="fax-number-input" ng-model=user.fax_number>
-          </div>
+                </tr>
+                <tr>
 
-          <br />
-          <label for="select-spot">アプリ名</label>
-          <select id="select-spot"
-                  ng-model="user.managed_spot"
-                  ng-options="spot as spot.name for spot in spotlist">
-          </select>
+                  <td>
+                    <br />
+                    <label for="company-name-input">会社名</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="company-name-input" ng-model=user.company_name>
+                    </div>
+                  </td>
 
-          <br />
-          <br />
-          <button class="btn btn-lg btn-default" ng-click="registerUser()">
-              <span class="glyphicon glyphicon-plus" aria-hidden=true></span>
-              登録 
-          </button>
-        </div>
+                  <td>
+                    <br />
+                    <label for="company-name-ruby-input">会社名(ふりがな)</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="company-name-ruby-input" ng-model=user.company_name_ruby>
+                    </div>
+                  </td>
 
+                </tr>
+                <tr>
+
+                  <td>
+                    <br />
+                    <label for="postal-code-input">郵便番号</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="postal-code-input" ng-model=user.postal_code>
+                    </div>
+                  </td>
+
+                  <td>
+                    <br />
+                    <label for="address-input">住所</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="address-input" ng-model=user.address>
+                    </div>
+                  </td>
+
+                </tr>
+                <tr>
+
+                  <td>
+                    <br />
+                    <label for="phone-number-input">電話番号</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="phone-number-input" ng-model=user.phone_number>
+                    </div>
+                  </td>
+
+                  <td>
+                    <br />
+                    <label for="fax-number-input">FAX番号</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="fax-number-input" ng-model=user.fax_number>
+                    </div>
+                  </td>
+
+                </tr>
+                <tr>
+
+                  <td>
+                    <br />
+                    <button class="btn btn-lg btn-default" ng-click="registerUser()">
+                        <span class="glyphicon glyphicon-plus" aria-hidden=true></span>
+                        登録
+                    </button>
+                  </td>
+
+
+                </table>
+            </div>
+        </form>
       </div><!-- /.row !-->
 
     </div><!-- /.container -->

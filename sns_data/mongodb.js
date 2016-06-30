@@ -1,29 +1,36 @@
-var MongoClient = require('mongodb').MongoClient;
-
+var mongo = require('mongodb');
+var MongoClient = mongo.MongoClient;
 var dbURL = "mongodb://localhost:27017/spotlist";
+var mongoLog = require("./simpleLog.js").makeLog("mongo.log");
 
 function storeDataInCollection(url, collectionName, data) {
 
-  function storeData(err, db) {
+  var storageResultPromise = new Promise((resolve, reject)=>{
 
-    if(err) {return console.dir(err);}
+    function storeData(err, db) {
 
-    db.createCollection(collectionName, function(err, collection) {});
+      if(err) {reject(err);}
 
-    var rawDataCollection = db.collection(collectionName);
+      db.createCollection(collectionName, function(err, collection) {});
 
-    rawDataCollection.insert(data, {w:1}, function(err, result) {
+      var rawDataCollection = db.collection(collectionName);
 
-      if (err) {return console.dir(err);}
-      else {console.log(result);}
+      rawDataCollection.insert(data, {w:1}, function(err, result) {
 
-      db.close();
+        if (err) {reject(err);}
+        else {resolve(result);}
 
-    });
+        db.close();
 
-  }
+      });
 
-  MongoClient.connect(url, storeData);
+    }
+
+    MongoClient.connect(url, storeData);
+
+  });
+
+  return storageResultPromise;
 
 }
 
@@ -33,7 +40,7 @@ function findDocuments(url, collectionName, queryObject, queryParameters) {
 
     function findDocs(err, db) {
 
-      if(err) {return console.dir(err);}
+      if(err) {return mongoLog.logError(err);}
 
       var collection = db.collection(collectionName);
 
@@ -58,34 +65,43 @@ function findDocuments(url, collectionName, queryObject, queryParameters) {
 
 function storeUniqueData(currentList, dbURL, collectionName, fieldToCompare) {
 
-  assert(currentList.length > 0, "No data to store!");
+  var storageResultPromise = new Promise((resolve, reject)=>{
 
-  var params = {_id: 0};
-  params[fieldToCompare] = 1;
+    // allow calling the function with a single object instead of an array of them
+    if (!Array.isArray(currentList)) {currentList = [currentList];}
 
-  var IDListPromise = findDocuments(dbURL, collectionName, {}, params);
+    if (!(currentList.length > 0)) {reject(new Error("No data to store!"));}
 
-  IDListPromise.then(function(IDObjectList) {
+    var params = {_id: 0};
+    params[fieldToCompare] = 1;
 
-    var IDList = IDObjectList.map(function(arg){return arg[fieldToCompare];});
-    var filteredData = [];
+    var IDListPromise = findDocuments(dbURL, collectionName, {}, params);
 
-    for (var i = 0; i < currentList.length; i++) {
-      if (IDList.indexOf(currentList[i][fieldToCompare]) == -1) {
-        filteredData.push(currentList[i]);
+    IDListPromise.then(function(IDObjectList) {
+
+      var IDList = IDObjectList.map(function(arg){return arg[fieldToCompare];});
+      var filteredData = [];
+
+      for (var i = 0; i < currentList.length; i++) {
+        if (IDList.indexOf(currentList[i][fieldToCompare]) == -1) {
+          filteredData.push(currentList[i]);
+        }
       }
-    }
 
-    if (filteredData.length > 0) {
-      storeDataInCollection(dbURL, collectionName, filteredData);
-    }
-    else {
-      console.log("All data is already stored.")
-    }
+      if (filteredData.length > 0) {
+        resolve(storeDataInCollection(dbURL, collectionName, filteredData));
+      }
+      else {
+        reject("Data is already stored: " + collectionName + " " + fieldToCompare + " " + String(filteredData));
+      }
+
+    });
+
+    IDListPromise.catch(reject);
 
   });
 
-  IDListPromise.catch(console.dir);
+  return storageResultPromise;
 
 }
 
@@ -93,15 +109,17 @@ function updateOne(dbURL, collectionName, queryObject, updateDataObject) {
 
   function performUpdate(err, db) {
 
-    if (err) {return console.dir(err);}
+    if (err) {return mongoLog.logError(err);}
 
     var collection = db.collection(collectionName);
     collection.updateOne(queryObject, {$set: updateDataObject}, function(err, result) {
 
       db.close();
 
-      if (err) {console.dir(err);}
-      else {console.log(result);}
+      if (err) {mongoLog.logError(err);}
+      else {
+        mongoLog.writeToLog(result);
+      }
 
     });
 
@@ -116,3 +134,4 @@ module.exports.dbURL = dbURL;
 module.exports.findDocuments = findDocuments;
 module.exports.storeUniqueData = storeUniqueData;
 module.exports.updateOne = updateOne;
+module.exports.ObjectId = mongo.ObjectId;

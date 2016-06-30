@@ -12,6 +12,14 @@ input[type="checkbox"][id^="cb"] {
   display: none;
 }
 
+.imageCheckbox {
+  display: none;
+}
+
+.approved {
+  opacity: .15;
+}
+
 label {
   border: 1px solid #fff;
   padding: 10px;
@@ -53,7 +61,7 @@ label img {
   transform-origin: 50% 50%;
 }
 
-#remove-image {
+.remove-image {
   height: 35px;
   width: 35px;
   transition-duration: 0.2s;

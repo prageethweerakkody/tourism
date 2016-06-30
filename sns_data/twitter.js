@@ -1,54 +1,95 @@
 var Twitter = require('twitter');
 var mongo = require("./mongodb.js");
+var twitterLog = require("./simpleLog.js").makeLog("twitter.log");
 
-var client = new Twitter({
-  consumer_key: 'W1R7bE9OacUrYWgRJiii8a6nq',
-  consumer_secret: 'LN3K2PJ2TLQlvHFYLVGN7FOkTAFCGmzdzYFjK39Sc893uBAN6E',
-  access_token_key: '730652063940534272-4aImtdzMSLlGG9j6DzdSBYtRIhODmWr',
-  access_token_secret: 'NjqAj2onGK0uCJzu0aVHQ62crjf9mPhzVPSXGjOicU9Wp'
-});
+function fixSpotName(name) {
+  var result = name;
+  /* the following two left parentheses are not the same.
+     this function removes both kinds. */
+  result = result.replace(/（.*/, "");
+  result = result.replace(/\(.*/, "");
+  if (result.length > 0) {return result;}
+  else {return name};
+}
 
-var endpoint = 'search/tweets';
+function processSlowly(list, callback, delay) {
+  if (list.length == 0) {return true;}
+  callback(list[0]);
+  setTimeout(()=>{processSlowly(list.slice(1, list.length), callback, delay)}, delay);
+}
 
-// retrieve spot names
-var collectionName = "spotlist";
-var queryObject = {};
-var params = {fields:{name:1, _id:0}};
-var spotNamesPromise = mongo.findDocuments(mongo.dbURL, collectionName, queryObject, params);
+// grab the tweets and put them in the database
+function main(queryObject) {
 
-spotNamesPromise.then(function(spotObjectList) {
+  var client = new Twitter({
+    consumer_key: 'W1R7bE9OacUrYWgRJiii8a6nq',
+    consumer_secret: 'LN3K2PJ2TLQlvHFYLVGN7FOkTAFCGmzdzYFjK39Sc893uBAN6E',
+    access_token_key: '730652063940534272-4aImtdzMSLlGG9j6DzdSBYtRIhODmWr',
+    access_token_secret: 'NjqAj2onGK0uCJzu0aVHQ62crjf9mPhzVPSXGjOicU9Wp'
+  });
 
-  // turn array of objects into array of names
-  var spotNamesList = spotObjectList.map(function(arg){return arg.name;});
+  var endpoint = 'search/tweets';
 
-  assert(spotNamesList.length > 0, "No spot names found!")
+  // retrieve spot names
+  var collectionName = "spotlist";
+  if (!queryObject) {queryObject = {};}
+  // will work even if not all spots have names
+  // (not sure why that would ever happen, but better safe than sorry)
+  if (!queryObject.name) {queryObject.name = {$exists: true, $ne: null}};
+  var params = {fields:{name:1}};
+  var spotNamesPromise = mongo.findDocuments(mongo.dbURL, collectionName, queryObject, params);
 
-  // store tweets for every spot name
-  for (var i = 0; i < spotNamesList.length; i++) {
+  spotNamesPromise.then(function(spotObjectList) {
 
-    var params = {q: spotNamesList[i]};
+    if (!(spotObjectList.length > 0)) {return twitterLog.logError("No spot names found!");}
 
-    // store the unique tweets
-    function storeTweets(error, tweets, response) {
+    // store tweets for every spot name
+    function getTweetsForSpot(spot) {
 
-      if (!error) {
+      spot.name = fixSpotName(spot.name);
 
-        var collectionName = "rawTweetData";
-        var fieldToCompare = "id_str";
+      var params = {q: spot.name + " OR #" + spot.name, count: 100};
 
-        mongo.storeUniqueData(tweets.statuses, mongo.dbURL, collectionName, fieldToCompare);
+      // store the unique tweets
+      function storeTweets(error, tweets, response, spot_id) {
+
+        if (!error) {
+
+          var collectionName = "rawTweetData";
+          var fieldToCompare = "id_str";
+
+          // set tweet spot ids
+          tweets.statuses.map((arg)=>{arg["spot_id"] = spot_id; return arg;});
+
+          // set approval status to false
+          tweets.statuses.map((arg)=>{arg["approvalStatus"] = false; return arg;});
+
+          mongo.storeUniqueData(tweets.statuses, mongo.dbURL, collectionName, fieldToCompare)
+            .then(twitterLog.writeToLog)
+            .catch(twitterLog.logError);
+
+        }
+
+        else {twitterLog.logError(error);}
 
       }
 
-      else {console.dir(error);}
+      function makeTweetStorer(spot_id) {
+        return (error, tweets, response)=>{storeTweets(error, tweets, response, spot_id);};
+      }
+
+      // get the tweets and store them once obtained
+      client.get(endpoint, params, makeTweetStorer(spot["_id"]));
 
     }
 
-    // get the tweets and store them once obtained
-    client.get(endpoint, params, storeTweets);
+    processSlowly(spotObjectList, getTweetsForSpot, 5000);
 
-  }
+  });
 
-});
+  spotNamesPromise.catch(twitterLog.logError);
 
-spotNamesPromise.catch(console.dir);
+}
+
+if (require.main === module) {main();}
+else {module.exports.main = main;}

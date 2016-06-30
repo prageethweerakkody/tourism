@@ -1,52 +1,11 @@
-var https = require("https");
+var httpsPromise = require("./httpsPromise.js");
 var mongo = require("./mongodb.js")
+var dl = require("./downloadImage.js")
+var instagramLog = require("./simpleLog.js").makeLog("instagram.log");
 
-function processRequest(response) {
-
-  response.setEncoding("utf-8");
-  console.log(response.statusCode);
-
-  var source = "";
-
-  response.on("data", function(data){source += data;});
-
-  response.on("end", function(){extractAndStoreImages(source)});
-
-}
-
-// retrieve spot names
-var collectionName = "spotlist";
-var queryObject = {};
-var params = {fields:{tag_instagram:1, _id:0}};
-
-var spotNamesPromise = mongo.findDocuments(mongo.dbURL, collectionName, queryObject, params);
-
-spotNamesPromise.then(
-
-  function(spotNamesList) {
-
-    assert(spotNamesList.length > 0, "No spot names found!")
-
-    // hopefully instagram doesn't change this...
-    var urlBase = "https://www.instagram.com/explore/tags/";
-
-    for (var i = 0; i < spotNamesList.length; i++) {
-
-      // make one request for every spot name
-      // if the spot names are not tags in instagram, the requests will fail
-      var fullSpotURL = urlBase + encodeURIComponent(spotNamesList[i].name) + "/";
-      https.get(fullSpotURL, processRequest);
-
-    }
-
-  }
-
-);
-
-spotNamesPromise.catch(console.dir);
 
 // grabs the page source and stores non-duplicate images in the database
-function extractAndStoreImages (source) {
+function extractAndStoreImages (source, spot_id) {
 
   // get the raw image html
   var imageCodeRegex = /window._sharedData = (.*?);<\/script>/;
@@ -65,8 +24,94 @@ function extractAndStoreImages (source) {
 
   var collectionName = "rawImageData";
   var fieldToCompare = "id";
+  var imageURLFieldName = "display_src";
 
-  // store only the unique images
-  mongo.storeUniqueData(images, mongo.dbURL, collectionName, fieldToCompare);
+  // store the images slowly so we don't overwhelm our 1gb of ram
+  function storeInstagramImage(image) {
+
+    image["spot_id"] = spot_id;
+    image["approvalStatus"] = false;
+
+    dl.downloadAndStoreImage(mongo.dbURL, collectionName, image, fieldToCompare, imageURLFieldName);
+    instagramLog.writeToLog(image);
+
+  }
+
+  function processSlowly(list, callback, delay) {
+    if (list.length == 0) {return true;}
+    callback(list[0]);
+    setTimeout(()=>{processSlowly(list.slice(1, list.length), callback, delay)}, delay);
+  }
+
+  processSlowly(images, storeInstagramImage, 5000);
 
 }
+
+// lets us pass the spot id into the callback
+function makeImageExtractor(spot_id) {
+  return (source)=>{extractAndStoreImages(source, spot_id)};
+}
+
+// grab the images and put them in the database
+function main(queryObject) {
+
+  if (queryObject) {instagramLog.writeToLog(queryObject);}
+  else {instagramLog.writeToLog("Grabbing images for all spots.");}
+
+  // retrieve instagram tag names
+  var collectionName = "spotlist";
+  if (!queryObject) {queryObject = {};}
+  var instagramTagFieldName = "tag_instagram";
+  // will work even if not all spots have instagram tag names
+  if (!queryObject[instagramTagFieldName]) {
+    queryObject[instagramTagFieldName] = {$exists: true, $ne: null}
+  };
+
+  // done this way so instagramTagFieldName can be changed easily from above if needed
+  // i'm not aware of a nicer way to accomplish this without hardcoding the field name
+  var params = {};
+  params["fields"] = {};
+  params["fields"][instagramTagFieldName] = 1;
+
+  var spotNamesPromise = mongo.findDocuments(mongo.dbURL, collectionName, queryObject, params);
+
+  spotNamesPromise.then((spotNamesList)=>{
+
+      if (!(spotNamesList.length > 0)) {return instagramLog.logError("No spot names found!");}
+
+      // hopefully instagram doesn't change this...
+      var urlBase = "https://www.instagram.com/explore/tags/";
+
+      for (var i = 0; i < spotNamesList.length; i++) {
+
+        if (Array.isArray(spotNamesList[i][instagramTagFieldName])) {
+
+          var instagramTagList = spotNamesList[i][instagramTagFieldName];
+          for (var tagIndex = 0; tagIndex < instagramTagList.length; tagIndex++) {
+            var fullSpotURL = urlBase + encodeURIComponent(instagramTagList[tagIndex]) + "/";
+            httpsPromise.getRequestPromise(fullSpotURL, "utf-8")
+              .then(makeImageExtractor(spotNamesList[i]["_id"]))
+              .catch(instagramLog.logError);
+          }
+
+        } else {
+          // make one request for every spot name
+          var fullSpotURL = urlBase + encodeURIComponent(spotNamesList[i][instagramTagFieldName]) + "/";
+          httpsPromise.getRequestPromise(fullSpotURL, "utf-8")
+            .then(makeImageExtractor(spotNamesList[i]["_id"]))
+            .catch(instagramLog.logError);
+
+        }
+
+      }
+
+    }
+
+  );
+
+  spotNamesPromise.catch(instagramLog.logError);
+
+}
+
+if (require.main === module) {main();}
+else {module.exports.main = main;}

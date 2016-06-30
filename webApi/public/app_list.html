@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html ng-app="mataTabi">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+	<title>アプリ一覧</title>
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+	<!--lightbox -->
+	<link rel="stylesheet" type="text/css" href="css/lightbox.css">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!--lightbox -->
+    <link rel="stylesheet" type="text/css" href="css/lightbox.css">
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/starter-template.css" rel="stylesheet">
+    <link href="css/dashboard.css" rel="stylesheet">
+	</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+<script src="controllers/controller.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="js/lightbox.min.js"></script>
+
+    <!-- トップナビゲーション -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container" ng-controller="AppCtrl">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+          </button>
+          <p class="navbar-brand">また旅・管理</p>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#" ng-click="logout()">ログアウト<span class="glyphicon glyphicon-off" aria-hidden=true></span></a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <!-- サイドバー -->
+    <div class="container-fluid" ng-controller="AppCtrl">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li>
+                <a href="#" ng-click="openControl()">
+                    <span class="glyphicon glyphicon-cog" aria-hidden=true>コントロールパネル</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" ng-click="openUserList()">
+                    <span class="glyphicon glyphicon-plus" aria-hidden=true>ユーザー一覧(管理者)</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" ng-click="openSpotList()">
+                    <span class="glyphicon glyphicon-list" aria-hidden=true>スポット一覧(管理者)</span>
+                </a>
+            </li>
+            <li class="active">
+                <a href="#" ng-click="openAppList()">
+                    <span class="glyphicon glyphicon-align-left" aria-hidden=true>アプリ一覧(管理者)</span>
+                </a>
+            </li>
+       <!-- <li>
+                <a href="#">
+                    <span class="glyphicon glyphicon-question-sign" aria-hidden=true>連絡事項</span>
+                </a>
+            </li> -->
+          </ul>
+        </div>
+    </div>
+
+<div class="container-fluid" ng-controller="AppCtrl" >
+  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"> <!-- style="height:1920px; width:1080px; overflow:auto;"> -->
+	<h1 ng-hide="hideTable">アプリ一覧</h1>
+	<!-- <button class="btn btn-primary" ng-click="openAppRegister()">アプリ登録</button> -->
+	<table class="table table-condensed table-striped" ng-hide="hideTable">
+		<thead>
+			<tr>
+                <th class="col-sm-2"></th>
+                <th class="col-sm-2"></th>
+				<th class="col-sm-2">アプリ名</th>
+				<th class="col-sm-2">説明文</th>
+				<th class="col-sm-2">TOP画像</th>
+                <th class="col-sm-2">Facebookアイコン画像</th>
+				<th class="col-sm-2">App管理者の連絡情報</th>
+                <th class="col-sm-8">リンク情報</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="app in applist">
+                <td>
+                    <button class="btn btn-danger" ng-click="removeApp(app._id)" disabled>削除</button>
+                </td>
+                <td>
+                    <button class="btn btn-warning" ng-click="editApp(app._id)">情報登録</button>
+                </td>
+				<td>
+                    <div style="height:50px; width:150px; overflow-x:auto;">
+                        {{app.name}}
+                    <div>
+                </td>
+                <td>
+                    <div style="height:50px; width:150px; overflow-x:auto;">
+                        {{app.about}}
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <a href="{{app.image}}" data-title="first" data-lightbox="vacation">
+                            <img src="{{app.image}}" width="200px" class="img-thumbnail">
+                        </a>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <a href="{{app.facebook_icon}}" data-title="first" data-lightbox="vacation">
+                            <img src="{{app.facebook_icon}}" width="100px" class="img-thumbnail">
+                        </a>
+                    </div>
+                </td>
+                <td>
+                    <div style="height:50px; width:150px; overflow-x:auto;">
+                        {{app.contact_information}}
+                    </div>
+                </td>
+                <td>
+                    <div style="height:200px; width:200px; overflow-x:auto;">
+                        <a href="{{app.link_1}}">{{app.link_1_name}}</a>
+                        <br /><a href="{{app.link_2}}">{{app.link_2_name}}</a>
+                        <br /><a href="{{app.link_3}}">{{app.link_3_name}}</a>
+                        <br /><a href="{{app.link_4}}">{{app.link_4_name}}</a>
+                        <br /><a href="{{app.link_5}}">{{app.link_5_name}}</a>
+                    </div>
+                </td>
+			</tr>
+		</tbody>
+	</table>
+
+    <div ng-show="appToEdit">
+        <!-- アプリ情報登録 -->
+        <div class="col-md-10 col-md-offset-2">
+          <h2>アプリ情報登録</h2>
+          <label for="app-name-input">アプリ名</label>
+          <div class="input-group">
+              <input type="text" class="form-control" id="app-name-input" ng-model=appToEdit.name disabled>
+          </div>
+
+          <br />
+          <label for="about-input">このアプリについて</label>
+          <div class="input-group">
+              <textarea class="form-control"
+                        id="about-input"
+                        placeholder="このアプリについて......"
+                        cols="45"
+                        rows="8"
+                        ng-model=appToEdit.about></textarea>
+          </div>
+
+          <br />
+          <label for="app-image-input">アプリイメージ画像</label>
+          <br />
+          現在使用:
+          <a href="{{appToEdit.image}}" data-title="first" data-lightbox="vacation">
+              <img src="{{appToEdit.image}}" width="200px" class="img-thumbnail">
+          </a>
+          <div class="input-group">
+              <input type="file" id="app-image-input" ng-model=appToEdit.new_image accept="image/*" app-fileread>
+          </div>
+
+          <br />
+          <label for="app-image-input">Facebookアイコン画像</label>
+          <br />
+          現在使用:
+          <a href="{{appToEdit.facebook_icon}}" data-title="first" data-lightbox="vacation">
+              <img src="{{appToEdit.facebook_icon}}" width="200px" class="img-thumbnail">
+          </a>
+
+          <div class="input-group">
+              <input type="file" id="facebook-icon-input" ng-model=appToEdit.new_facebook_icon accept="image/*" app-fileread>
+          </div>
+
+          <br />
+          <label for="app-manager-contact-input">アプリ管理者の連絡先</label>
+          <div class="input-group">
+              <input type="text" class="form-control" id="app-manager-contact-input" ng-model=appToEdit.contact_information>
+          </div>
+
+
+          <label for="app-link-input">リンク情報</label>
+              <div id="app-link-input">
+                <table>
+
+                  <tr>
+                    <td>
+                      <div style="margin:10px;">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="http://www.abc.com" ng-model=appToEdit.link_1>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="リンクの表示名(例):ABC社" ng-model=appToEdit.link_1_name>
+                        </div>
+                      </div>
+                    </td>
+
+
+
+                    <td>
+                      <div style="margin:10px;">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="http://www.def.com" ng-model=appToEdit.link_2>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="リンクの表示名(例):DEF社" ng-model=appToEdit.link_2_name>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+
+
+
+                  <tr>
+                    <td>
+                      <div style="margin:10px;">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="http://www.ghi.com" ng-model=appToEdit.link_3>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="リンクの表示名(例):GHI社" ng-model=appToEdit.link_3_name>
+                        </div>
+                      </div>
+                    </td>
+
+
+                    <td>
+                      <div style="margin:10px;">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="http://www.jkl.com" ng-model=appToEdit.link_4>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="リンクの表示名(例):JKL社" ng-model=appToEdit.link_4_name>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+
+
+                  <tr>
+                    <td>
+                      <div style="margin:10px;">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="http://www.mno.com" ng-model=appToEdit.link_5>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="リンクの表示名(例):MNO社" ng-model=appToEdit.link_5_name>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+
+                </table>
+              </div>
+
+          <button class="btn btn-lg btn-default" ng-click="updateApp()">
+              <span class="glyphicon glyphicon-plus" aria-hidden=true></span>
+              登録
+          </button>
+        </div>
+        <!-- 編集 -->
+  </div>
+</div>
+
+</body>
+</html>
